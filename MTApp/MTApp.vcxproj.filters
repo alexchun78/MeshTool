@@ -24,12 +24,18 @@
     <ClCompile Include="source\CMeshIOManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CHEManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\CMeshIOManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CHEManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

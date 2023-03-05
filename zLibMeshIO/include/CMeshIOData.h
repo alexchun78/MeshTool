@@ -1,11 +1,30 @@
 #pragma once
 namespace MeshIOLib
 {
+    typedef long index_t;
+
     typedef struct triangle_tag {
 
-        int _vertexID[3];
+        index_t _vertexID[3];
         Vec3 _normal;
+
+        index_t& i() { return _vertexID[0]; }
+        const index_t& i() const { return _vertexID[0]; }
+
+        index_t& j() { return _vertexID[1]; }
+        const index_t& j() const { return _vertexID[1]; }
+
+        index_t& k() { return _vertexID[2]; }
+        const index_t& k() const { return _vertexID[2]; }
+
+        triangle_tag()
+        {
+            _vertexID[0] = _vertexID[1] = _vertexID[2] = -1;
+        }
+
     } Triangle;
+
+
 
     typedef struct vertex_tag {
 
