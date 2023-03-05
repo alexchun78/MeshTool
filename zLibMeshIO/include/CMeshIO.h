@@ -14,7 +14,7 @@
 #endif
 #endif
 
-namespace MeshIO
+namespace MeshIOLib
 {
     class CMeshIO {
 

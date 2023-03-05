@@ -8,10 +8,10 @@
 //
 //int main()
 //{
-//    MeshIO::CMeshIO* temp = new MeshIO::CMeshIO();
+//    MeshIOLib::CMeshIO* temp = new MeshIOLib::CMeshIO();
 //    //temp->LoadOBJ("..\\smartslicerA.OBJ");
 //    temp->LoadSTL("..\\smartslicerA.stl");
-//    std::vector<MeshIO::Vertex> vecVerts = temp->GetVertexList();
-//    std::vector<MeshIO::Triangle> vecTris = temp->GetTriangleList();
+//    std::vector<MeshIOLib::Vertex> vecVerts = temp->GetVertexList();
+//    std::vector<MeshIOLib::Triangle> vecTris = temp->GetTriangleList();
 //    std::cout << "Hello World!\n";
 //}

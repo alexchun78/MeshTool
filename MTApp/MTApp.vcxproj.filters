@@ -21,7 +21,7 @@
     <ClCompile Include="source\MTApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MeshIO.cpp">
+    <ClCompile Include="source\CMeshIOManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MeshIO.h">
+    <ClInclude Include="include\CMeshIOManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

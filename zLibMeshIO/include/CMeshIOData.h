@@ -1,5 +1,5 @@
 #pragma once
-namespace MeshIO
+namespace MeshIOLib
 {
     typedef struct triangle_tag {
 

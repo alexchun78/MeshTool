@@ -4,7 +4,7 @@
 #include <thread>
 #include <algorithm>
 #include <future>
-namespace MeshIO
+namespace MeshIOLib
 {
     void parallel_sort(std::vector<Vertex>::iterator begin, std::vector<Vertex>::iterator end, int threads);
 
