@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 namespace MeshIOLib
 {
     typedef long index_t;
@@ -37,9 +38,11 @@ namespace MeshIOLib
 
         Vec3 _position;
         size_t _triangleID;
-        size_t* _ptrTriIDs = NULL; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
+        std::vector<size_t> _ptrTriIDs; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
+        //size_t* _ptrTriIDs = nullptr; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         size_t _vid; // _triangleID의 face 내에서 vertex 위치 (0,1,2)
-        size_t* _ptrVids = NULL ; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
+        //size_t* _ptrVids = nullptr; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
+        std::vector<size_t> _ptrVids; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
 
         bool operator==(const vertex_tag& rhs) const
         {
@@ -64,4 +67,20 @@ namespace MeshIOLib
         }
 
     } Vertex;
+
+    typedef struct edge_tag {
+
+        index_t _vertexID[2];
+
+        index_t& i() { return _vertexID[0]; }
+        const index_t& i() const { return _vertexID[0]; }
+
+        index_t& j() { return _vertexID[1]; }
+        const index_t& j() const { return _vertexID[1]; }
+
+        edge_tag()
+        {
+            _vertexID[0] = _vertexID[1] = -1;
+        }
+    } Edge;
 };

@@ -152,8 +152,10 @@ namespace MeshIOLib
             // 이전 데이터를 정리한다.
             // // tri ids의 공간을 할당한다.
             size_t tempSize = temps.size();
-            prevVertex._ptrTriIDs = new size_t(tempSize);
-            prevVertex._ptrVids = new size_t(tempSize);
+            prevVertex._ptrTriIDs.resize(tempSize);
+            prevVertex._ptrVids.resize(tempSize);
+//            prevVertex._ptrTriIDs = new size_t(tempSize);
+//            prevVertex._ptrVids = new size_t(tempSize);
             for (size_t j = 0; j < tempSize; ++j)
             {
                 prevVertex._ptrTriIDs[j] = temps[j]._triangleID;

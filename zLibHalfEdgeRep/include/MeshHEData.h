@@ -2,28 +2,31 @@
 #define _MESHDATA_H
 #include "../../zLibMeshIO/include/Vector.h"
 
-struct edgeHE_tag;
-typedef struct vertexHE_tag
+
+namespace MeshHERepLib
 {
-    Vec3 _position;
-    edgeHE_tag& _ptrEdge;
-} VertexHE;
+    struct edgeHE_tag;
+    typedef struct vertexHE_tag
+    {
+        Vec3 _position;
+        edgeHE_tag* _ptrEdge;
+    } VertexHE;
 
-typedef struct faceHE_tag
-{
-    edgeHE_tag& edge;
-} FaceHE;
+    typedef struct faceHE_tag
+    {
+        edgeHE_tag* edge;
+    } FaceHE;
 
-typedef struct edgeHE_tag
-{
-    vertexHE_tag& _ptrVertex;
-    edgeHE_tag& _ptrPairEdge;
-    edgeHE_tag& _ptrNextHE;
-    edgeHE_tag& _ptrPrevHE;
-    faceHE_tag& _ptrFace;
+    typedef struct edgeHE_tag
+    {
+        vertexHE_tag* _ptrVertex;
+        edgeHE_tag* _ptrPairEdge;
+        edgeHE_tag* _ptrNextHE;
+        edgeHE_tag* _ptrPrevHE;
+        faceHE_tag* _ptrFace;
 
-} EdgeHE;
-
+    } EdgeHE;
+}
 
 
 // -- pointer (주소) 사용 방식

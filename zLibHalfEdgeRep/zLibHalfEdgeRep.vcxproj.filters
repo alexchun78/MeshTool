@@ -27,6 +27,15 @@
     <ClCompile Include="source\CMeshHE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\CDLLManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CMeshIOManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="zLibHalfEdgeRep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -40,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="include\CMeshHE.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CDLLManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMeshIOManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
