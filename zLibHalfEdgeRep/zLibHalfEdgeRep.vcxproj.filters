@@ -24,7 +24,7 @@
     <ClCompile Include="source\Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\zLibHalfEdgeRep.cpp">
+    <ClCompile Include="source\CMeshHE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,6 +36,9 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\zLibMeshIO\include\Vector.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CMeshHE.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>

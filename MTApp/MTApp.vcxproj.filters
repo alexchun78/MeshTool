@@ -24,7 +24,10 @@
     <ClCompile Include="source\CMeshIOManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CHEManager.cpp">
+    <ClCompile Include="source\CDLLManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CHEManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +38,10 @@
     <ClInclude Include="include\CMeshIOManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CHEManager.h">
+    <ClInclude Include="include\CDLLManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CHEManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
