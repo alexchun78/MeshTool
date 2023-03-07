@@ -4,6 +4,9 @@
 #include <thread>
 #include <algorithm>
 #include <future>
+#include <cassert>
+#include <set>
+
 namespace MeshIOLib
 {
     void parallel_sort(std::vector<Vertex>::iterator begin, std::vector<Vertex>::iterator end, int threads);
@@ -154,8 +157,6 @@ namespace MeshIOLib
             size_t tempSize = temps.size();
             prevVertex._ptrTriIDs.resize(tempSize);
             prevVertex._ptrVids.resize(tempSize);
-//            prevVertex._ptrTriIDs = new size_t(tempSize);
-//            prevVertex._ptrVids = new size_t(tempSize);
             for (size_t j = 0; j < tempSize; ++j)
             {
                 prevVertex._ptrTriIDs[j] = temps[j]._triangleID;
@@ -170,6 +171,10 @@ namespace MeshIOLib
                 size_t vID = prevVertex._ptrVids[t];
                 m_vecTriangles[fID]._vertexID[vID] = tempID;
             }
+            // 불필요한 데이터 삭제 : 만약 필요하다면 추후 되돌리기
+            prevVertex._ptrTriIDs.clear();
+            prevVertex._ptrVids.clear();
+
             m_vecVertices.push_back(prevVertex);
 
             // 임시 저장된 데이터들을 삭제한다.
@@ -334,42 +339,5 @@ namespace MeshIOLib
             }
             std::inplace_merge(begin, mid, end);
         }
-    }
-
-    // Export DLL
-    CMeshIO* CreateMeshIO()
-    {
-        return new CMeshIO();
-    }
-
-    void LoadSTL(CMeshIO* object, const char* filename)
-    {
-        if (object == NULL)
-            return;
-        object->LoadSTL(filename);
-    }
-  
-    void TerminateMeshIO(CMeshIO* object)
-    {
-        // 객체 해제
-        if (object != nullptr)
-        {
-            delete object;
-            object = nullptr;
-        }
-    }
-
-    std::vector<Triangle> GetTriangleList(CMeshIO* object)
-    {
-        if (object == NULL)
-            return std::vector<Triangle>();
-        return object->GetTriangleList();
-    }
-
-    std::vector<Vertex> GetVertexList(CMeshIO* object)
-    {
-        if (object == NULL)
-            return std::vector<Vertex>();
-        return object->GetVertexList();
     }
 };

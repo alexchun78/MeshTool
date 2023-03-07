@@ -22,8 +22,8 @@ int main()
     auto verts = ioManager->GetVertexList();
     auto tris = ioManager->GetTriangleList();
 
-    MeshHERepLib::CMeshHE* heManager = new MeshHERepLib::CMeshHE(verts, tris);
-
+    MeshHERepLib::CMeshHE* heManager = new MeshHERepLib::CMeshHE(verts.size(), tris);
+    heManager->Build();
 
 
     dllManager->TerminateDLL();

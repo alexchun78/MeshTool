@@ -6,14 +6,6 @@
 #include <fstream>
 #include <iostream>
 
-#ifndef MESHIOLIB_API
-#ifdef DLL_EXPORTS
-#define MESHIOLIB_API _declspec(dllexport)
-#else
-#define MESHIOLIB_API _declspec(dllimport)
-#endif
-#endif
-
 namespace MeshIOLib
 {
     class CMeshIO {
@@ -41,7 +33,7 @@ namespace MeshIOLib
         std::vector<Vertex> LoadSTL_Vertices(const char* filename);
         std::vector<Vertex> Load_ASCII(const char* filename);
         std::vector<Vertex> Load_Binary(const char* filename);
-
+   
     private:
         inline void write_float(float f, FILE* file) {
             fwrite(&f, sizeof(f), 1, file);
@@ -72,13 +64,5 @@ namespace MeshIOLib
         std::vector<Triangle> m_vecTriangles;
         std::vector<Vertex> m_vecVertices;
     };
-
-    extern "C" {
-        MESHIOLIB_API CMeshIO* CreateMeshIO();
-        MESHIOLIB_API void LoadSTL(CMeshIO* object, const char* filename);
-        MESHIOLIB_API std::vector<Triangle> GetTriangleList(CMeshIO* object);
-        MESHIOLIB_API std::vector<Vertex> GetVertexList(CMeshIO* object);
-        MESHIOLIB_API void TerminateMeshIO(CMeshIO* obj);
-    }
 };
 

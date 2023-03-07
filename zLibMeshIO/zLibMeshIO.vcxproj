@@ -174,6 +174,9 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
     <ClCompile Include="source\CMeshIO.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="source\Export.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="source\Vector.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -186,6 +189,7 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
   <ItemGroup>
     <ClInclude Include="include\CMeshIO.h" />
     <ClInclude Include="include\CMeshIOData.h" />
+    <ClInclude Include="include\Export.h" />
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>

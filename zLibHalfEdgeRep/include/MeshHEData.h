@@ -1,33 +1,34 @@
-#ifndef _MESHDATA_H
-#define _MESHDATA_H
+#ifndef _MESHHEREPLIB_MESHDATA_H
+#define _MESHHEREPLIB_MESHDATA_H
 #include "../../zLibMeshIO/include/Vector.h"
-
+#include "../../Common/include/CMeshIOData.h"
 
 namespace MeshHERepLib
 {
-    struct edgeHE_tag;
-    typedef struct vertexHE_tag
-    {
-        Vec3 _position;
-        edgeHE_tag* _ptrEdge;
-    } VertexHE;
+    //typedef long index_t;
 
-    typedef struct faceHE_tag
+    typedef struct halfedge_t
     {
-        edgeHE_tag* edge;
-    } FaceHE;
+        // Index into the vertex array.
+        MeshIOLib::index_t to_vertex;
+        // Index into the face array.
+        MeshIOLib::index_t face;
+        // Index into the edges array.
+        MeshIOLib::index_t edge;
+        // Index into the halfedges array.
+        MeshIOLib::index_t opposite_he;
+        // Index into the halfedges array.
+        MeshIOLib::index_t next_he;
 
-    typedef struct edgeHE_tag
-    {
-        vertexHE_tag* _ptrVertex;
-        edgeHE_tag* _ptrPairEdge;
-        edgeHE_tag* _ptrNextHE;
-        edgeHE_tag* _ptrPrevHE;
-        faceHE_tag* _ptrFace;
-
-    } EdgeHE;
+        halfedge_t() :
+            to_vertex(-1),
+            face(-1),
+            edge(-1),
+            opposite_he(-1),
+            next_he(-1)
+        {}
+    } HalfEdge;
 }
-
 
 // -- pointer (주소) 사용 방식
 //typedef struct edgeHE_tag
@@ -50,11 +51,4 @@ namespace MeshHERepLib
 //{
 //    EdgeHE* edge;
 //} FaceHE;
-//
-//typedef struct attributeHE_tag {
-//
-//    int _data;
-//
-//} AttributeHE;
-
-#endif // _MESHDATA_H
+#endif // _MESHHEREPLIB_MESHDATA_H

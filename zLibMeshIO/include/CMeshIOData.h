@@ -39,9 +39,7 @@ namespace MeshIOLib
         Vec3 _position;
         size_t _triangleID;
         std::vector<size_t> _ptrTriIDs; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
-        //size_t* _ptrTriIDs = nullptr; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         size_t _vid; // _triangleID의 face 내에서 vertex 위치 (0,1,2)
-        //size_t* _ptrVids = nullptr; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         std::vector<size_t> _ptrVids; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
 
         bool operator==(const vertex_tag& rhs) const
@@ -81,6 +79,12 @@ namespace MeshIOLib
         edge_tag()
         {
             _vertexID[0] = _vertexID[1] = -1;
+        }
+
+        edge_tag(const index_t v1, const index_t v2)
+        {
+            _vertexID[0] = v1;
+            _vertexID[1] = v2;
         }
     } Edge;
 };
