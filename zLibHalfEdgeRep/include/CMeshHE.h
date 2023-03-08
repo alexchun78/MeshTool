@@ -18,6 +18,10 @@ namespace MeshHERepLib
     
         bool Build(const unsigned long vertexListCount, const std::vector<MeshIOLib::Triangle>& vecTriangles);
 
+    public:
+        // Iterating around a face
+        std::vector<MeshIOLib::index_t> 
+
     private:
         bool Internal_GenUnOrderedEdgeFromTriangles(std::vector<MeshIOLib::Edge>& edgeList, const std::vector<MeshIOLib::Triangle>& tris);
         MeshHERepLib::HalfEdge& Internal_AddBlankHalfEdge(MeshIOLib::index_t& id, std::vector<MeshHERepLib::HalfEdge>& heList);
