@@ -38,6 +38,7 @@ namespace MeshIOLib
 
         Vec3 _position;
         size_t _triangleID;
+        size_t _originID;
         std::vector<size_t> _ptrTriIDs; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         size_t _vid; // _triangleID의 face 내에서 vertex 위치 (0,1,2)
         std::vector<size_t> _ptrVids; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들

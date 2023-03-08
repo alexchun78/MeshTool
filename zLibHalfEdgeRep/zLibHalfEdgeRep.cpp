@@ -23,7 +23,7 @@ int main()
     auto tris = ioManager->GetTriangleList();
 
     MeshHERepLib::CMeshHE* heManager = new MeshHERepLib::CMeshHE(verts.size(), tris);
-    heManager->Build();
+    heManager->Build(verts.size(), tris);
 
 
     dllManager->TerminateDLL();

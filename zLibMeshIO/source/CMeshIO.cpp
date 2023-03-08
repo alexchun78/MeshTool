@@ -143,29 +143,31 @@ namespace MeshIOLib
         std::vector<Vertex> verts_result;
         std::vector<Vertex> temps;
         Vertex prevVertex = verts_temp[0];          
-        for (size_t i = 0; i < verts_temp.size(); ++i)
+        size_t totalvertexCount = verts_temp.size();
+        for (size_t i = 0; i < totalvertexCount; ++i)
         {
             // 이전 값과 비교해서 같으면 저장한다.
             if (prevVertex == verts_temp[i])
             {
                 temps.push_back(verts_temp[i]);
-                continue;
+                if(i != totalvertexCount-1)
+                    continue;
             }
 
             // 이전 데이터를 정리한다.
             // // tri ids의 공간을 할당한다.
             size_t tempSize = temps.size();
-            prevVertex._ptrTriIDs.resize(tempSize);
-            prevVertex._ptrVids.resize(tempSize);
+            prevVertex._ptrTriIDs.reserve(tempSize);
+            prevVertex._ptrVids.reserve(tempSize);
             for (size_t j = 0; j < tempSize; ++j)
             {
-                prevVertex._ptrTriIDs[j] = temps[j]._triangleID;
-                prevVertex._ptrVids[j] = temps[j]._vid;
+                prevVertex._ptrTriIDs.push_back(temps[j]._triangleID);
+                prevVertex._ptrVids.push_back(temps[j]._vid);
             }
 
             // 최초 데이터만 최종 결과로 저장한다.
             size_t tempID = m_vecVertices.size();
-            for (size_t t = 0; t < temps.size(); ++t)
+            for (size_t t = 0; t < tempSize; ++t)
             {
                 size_t fID = prevVertex._ptrTriIDs[t];
                 size_t vID = prevVertex._ptrVids[t];
@@ -174,7 +176,6 @@ namespace MeshIOLib
             // 불필요한 데이터 삭제 : 만약 필요하다면 추후 되돌리기
             prevVertex._ptrTriIDs.clear();
             prevVertex._ptrVids.clear();
-
             m_vecVertices.push_back(prevVertex);
 
             // 임시 저장된 데이터들을 삭제한다.
