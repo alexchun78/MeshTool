@@ -24,7 +24,7 @@
     <ClCompile Include="source\Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\CMeshHE.cpp">
+    <ClCompile Include="source\CHalfEdgeRep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\CDLLManager.cpp">
@@ -34,6 +34,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="zLibHalfEdgeRep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Export.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,13 +50,16 @@
     <ClInclude Include="..\zLibMeshIO\include\Vector.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="include\CMeshHE.h">
+    <ClInclude Include="include\CHalfEdgeRep.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="include\CDLLManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\CMeshIOManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Export.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

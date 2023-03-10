@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include "include/CDLLManager.h"
 #include "include/CMeshIOManager.h"
-#include "include/CMeshHE.h"
+#include "include/CHalfEdgeRep.h"
 
 int main()
 {
@@ -22,7 +22,7 @@ int main()
     auto verts = ioManager->GetVertexList();
     auto tris = ioManager->GetTriangleList();
 
-    MeshHERepLib::CMeshHE* heManager = new MeshHERepLib::CMeshHE(verts.size(), tris);
+    MeshHERepLib::CHalfEdgeRep* heManager = new MeshHERepLib::CHalfEdgeRep(verts.size(), tris);
     heManager->Build(verts.size(), tris);
 
 

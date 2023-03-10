@@ -111,7 +111,7 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DLL_EXPORTS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -123,11 +123,9 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>rmdir "$(SolutionDir)Common\dll" /q /s
-if not exist "$(SolutionDir)Common\dll" mkdir "$(SolutionDir)Common\dll"
+      <Command>if not exist "$(SolutionDir)Common\dll" mkdir "$(SolutionDir)Common\dll"
 copy $(SolutionDir)Common\bin\$(Configuration)\*.dll $(SolutionDir)Common\dll\.
 
-rmdir "$(SolutionDir)Common\include" /q /s
 if not exist "$(SolutionDir)Common\include" mkdir "$(SolutionDir)Common\include"
 copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
     </PostBuildEvent>
