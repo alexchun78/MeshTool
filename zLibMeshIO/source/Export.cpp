@@ -8,14 +8,14 @@ namespace MeshIOLib
         return new CMeshIO();
     }
 
-    void LoadSTL(CMeshIO* object, const char* filename)
+    void LoadSTL(IN CMeshIO* object, IN const char* filename)
     {
         if (object == NULL)
             return;
         object->LoadSTL(filename);
     }
 
-    void TerminateMeshIO(CMeshIO* object)
+    void TerminateMeshIO(IN CMeshIO* object)
     {
         // ∞¥√º «ÿ¡¶
         if (object != nullptr)
@@ -25,14 +25,14 @@ namespace MeshIOLib
         }
     }
 
-    std::vector<Triangle> GetTriangleList(CMeshIO* object)
+    std::vector<Triangle> GetTriangleList(IN CMeshIO* object)
     {
         if (object == NULL)
             return std::vector<Triangle>();
         return object->GetTriangleList();
     }
 
-    std::vector<Vertex> GetVertexList(CMeshIO* object)
+    std::vector<Vertex> GetVertexList(IN CMeshIO* object)
     {
         if (object == NULL)
             return std::vector<Vertex>();
