@@ -1,0 +1,7 @@
+﻿  CMeshIO.cpp
+C:\_dev\MeshTool\zLibMeshIO\source\CMeshIO.cpp(374,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  Vector.cpp
+C:\_dev\MeshTool\zLibMeshIO\source\Vector.cpp(155,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  zLibMeshIO.cpp
+C:\_dev\MeshTool\zLibMeshIO\source\zLibMeshIO.cpp(18,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  Generating Code...
