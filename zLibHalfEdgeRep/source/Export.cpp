@@ -26,13 +26,14 @@ namespace MeshHERepLib
         return object->GetHalfEdge(id);
     }
 
-    //std::pair<MeshIOLib::index_t, MeshIOLib::index_t> GetEdgeFromHalfEdge(CHalfEdgeRep* object,  std::pair<MeshIOLib::index_t, MeshIOLib::index_t>& outEdge, const MeshIOLib::index_t id)
-    //{
-    //    if (object == NULL)
-    //        return std::make_pair(-2, -2); // error code : -2
-
-    //    return object->GetEdgeFromHalfEdge(id);
-    //}
+    bool GetEdgeFromHalfEdge(CHalfEdgeRep* object, std::pair<MeshIOLib::index_t, MeshIOLib::index_t>& edge, const MeshIOLib::index_t id)
+    {
+        if (object == NULL)
+            return false;
+        
+        edge = object->GetEdgeFromHalfEdge(id);
+        return true;
+    }
 
     MeshIOLib::index_t GetHalfEdgeIndexFromEdge(IN CHalfEdgeRep* object, IN const MeshIOLib::index_t& v1, IN const MeshIOLib::index_t& v2)
     {
@@ -90,13 +91,14 @@ namespace MeshHERepLib
         return true;
     }
 
-    //std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> GetBoundaryEdges(CHalfEdgeRep* object)
-    //{
-    //    if (object == NULL)
-    //        return std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>>();
+    bool GetBoundaryEdges(CHalfEdgeRep* object, std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>>& boundaryEdges)
+    {
+        if (object == NULL)
+            return false;
 
-    //    return object->GetBoundaryEdges();
-    //}
+        boundaryEdges = object->GetBoundaryEdges();
+        return true;
+    }
 
     void TerminateHalfEdgeRep(IN CHalfEdgeRep* object)
     {
