@@ -1,7 +1,0 @@
-﻿  pch.cpp
-  CDLLManager.cpp
-  CHEManager.cpp
-  CMeshIOManager.cpp
-  MTApp.cpp
-  Generating Code...
-  MTApp.vcxproj -> C:\_dev\MeshTool\Debug\MTApp.exe
