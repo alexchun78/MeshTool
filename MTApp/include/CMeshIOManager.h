@@ -2,8 +2,6 @@
 #include <vector>
 #include <Windows.h>
 
-
-
 class CMeshIOManager
 {
 public:

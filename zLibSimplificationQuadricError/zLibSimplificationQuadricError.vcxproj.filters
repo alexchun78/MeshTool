@@ -13,42 +13,36 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Export">
-      <UniqueIdentifier>{0ccfd531-8866-43e7-a61c-75035d007c86}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\CMeshIO.cpp">
+    <ClCompile Include="source\zLibSimplificationQuadricError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Vector.cpp">
+    <ClCompile Include="source\CDLLManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\zLibMeshIO.cpp">
+    <ClCompile Include="source\CHEManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="export\Export.cpp">
-      <Filter>Export</Filter>
+    <ClCompile Include="source\Export.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\CMeshIO.h">
+    <ClInclude Include="include\CDLLManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\CMeshIOData.h">
+    <ClInclude Include="include\CHEManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Vector.h">
+    <ClInclude Include="include\Export.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="export\Export.h">
-      <Filter>Export</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

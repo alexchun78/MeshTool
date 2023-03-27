@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Model">
       <UniqueIdentifier>{06691fce-a8c0-418a-9f96-052a10ec9d8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Export">
+      <UniqueIdentifier>{8e179d87-a866-415b-a6d3-3c018f5e6a0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -36,8 +39,8 @@
     <ClCompile Include="zLibHalfEdgeRep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Export.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="export\Export.cpp">
+      <Filter>Export</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,17 +53,17 @@
     <ClInclude Include="..\zLibMeshIO\include\Vector.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="include\CHalfEdgeRep.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="include\CDLLManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\CMeshIOManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Export.h">
+    <ClInclude Include="include\CHalfEdgeRep.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="export\Export.h">
+      <Filter>Export</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
