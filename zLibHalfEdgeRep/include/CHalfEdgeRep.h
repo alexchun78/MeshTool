@@ -14,7 +14,6 @@ namespace MeshHERepLib
     {
     public:
         CHalfEdgeRep();
-        // CHalfEdgeRep(const unsigned long vertexCount, const std::vector<MeshIOLib::Triangle>& vecTriangles);
         ~CHalfEdgeRep();
     
         bool Build(const unsigned long vertexListCount, const std::vector<MeshIOLib::Triangle>& vecTriangles);
@@ -32,22 +31,13 @@ namespace MeshHERepLib
         std::vector<MeshIOLib::index_t> GetBoundaryVertices() const;
         std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> GetBoundaryEdges() const;
 
-    //public:
-    //    inline unsigned long GetVertexCount() { return m_vertexCount; }
-    //    inline std::vector<MeshIOLib::Triangle>& GetTriangles() { return m_vecTriangles; }
-
     private:
         bool Internal_GenUnOrderedEdgeFromTriangles(std::vector<MeshIOLib::Edge>& edgeList, const std::vector<MeshIOLib::Triangle>& tris);
         MeshHERepLib::HalfEdge& Internal_AddBlankHalfEdge(MeshIOLib::index_t& id, std::vector<MeshHERepLib::HalfEdge>& heList);
         MeshIOLib::index_t Internal_FindEdge2FaceIndex(const Edge2Index_map& map, const MeshIOLib::index_t v0, const MeshIOLib::index_t v1);
         void Internal_Clear();
         MeshIOLib::index_t Internal_AddNextHalfEdge(const HalfEdge& he, const std::vector<MeshIOLib::Triangle>& tris, Edge2Index_map& halfedgeMap);
-        void Internal_HandlingButterFlyVertices(std::vector<MeshHERepLib::HalfEdge>& halfEdges, const std::vector<MeshIOLib::index_t>& boundaryHalfEdgeIndices);
-    
-    //private:
-    //    // 입력 받아야 하는 데이터들
-    //    unsigned long m_vertexCount;
-    //    std::vector<MeshIOLib::Triangle> m_vecTriangles;
+        void Internal_HandlingButterFlyVertices(std::vector<MeshHERepLib::HalfEdge>& halfEdges, const std::vector<MeshIOLib::index_t>& boundaryHalfEdgeIndices);   
 
     private:
         // 생성되는 데이터들

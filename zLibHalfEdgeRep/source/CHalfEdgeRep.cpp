@@ -7,13 +7,10 @@ namespace MeshHERepLib
 {
     CHalfEdgeRep::CHalfEdgeRep()
     {
-        //m_vertexCount = vertexCount;
-        //m_vecTriangles = vecTriangles;
     }
 
     CHalfEdgeRep::~CHalfEdgeRep()
     {
-
     }
 
     /*****

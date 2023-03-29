@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Export">
+      <UniqueIdentifier>{81862bae-d437-4a48-bb17-f315ca69774b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{06001b25-a659-4071-8378-9f22ef54c163}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -21,34 +27,40 @@
     <ClCompile Include="source\zLibSimplificationQuadricError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\CDLLManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\CHEManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Export.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CMeshIOManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="export\Export.cpp">
+      <Filter>Export</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CSimplificationQuadricError.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\CDLLManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\CHEManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\CDLLManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CHEManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Export.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CMeshIOManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="export\Export.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSimplificationQuadricError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\CDLLManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\CHEManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

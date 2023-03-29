@@ -119,6 +119,8 @@ namespace MeshIOLib
         std::vector<size_t> _ptrTriIDs; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         std::vector<size_t> _ptrVids; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
 
+        SymetricMatrix _q;
+
         bool operator==(const vertex_tag& rhs) const
         {
             return (_position.x == rhs._position.x && _position.y == rhs._position.y && _position.z == rhs._position.z);
