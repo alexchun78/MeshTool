@@ -96,6 +96,13 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(SolutionDir)Common\dll" mkdir "$(SolutionDir)Common\dll"
+copy $(SolutionDir)Common\bin\$(Configuration)\*.dll $(SolutionDir)Common\dll\.
+
+if not exist "$(SolutionDir)Common\include" mkdir "$(SolutionDir)Common\include"
+copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -148,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CMeshIOManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -168,6 +176,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CMeshIOManager.h" />
     <ClInclude Include="include\CDLLManager.h" />
     <ClInclude Include="include\CHEManager.h" />
     <ClInclude Include="include\Export.h" />

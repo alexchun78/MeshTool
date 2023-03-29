@@ -5,10 +5,10 @@
 
 namespace MeshHERepLib
 {
-    CHalfEdgeRep::CHalfEdgeRep(const unsigned long vertexCount, const std::vector<MeshIOLib::Triangle>& vecTriangles)
+    CHalfEdgeRep::CHalfEdgeRep()
     {
-        m_vertexCount = vertexCount;
-        m_vecTriangles = vecTriangles;
+        //m_vertexCount = vertexCount;
+        //m_vecTriangles = vecTriangles;
     }
 
     CHalfEdgeRep::~CHalfEdgeRep()
@@ -39,11 +39,12 @@ namespace MeshHERepLib
 
         // triangle을 순회하며 edge와 face id를 매핑한다.
         Edge2Index_map edge2fid_map;
-        for (auto f = 0; f < faceCount; ++f)
+        
+        loopi(0,faceCount)
         {
-            edge2fid_map[std::make_pair(vecTriangles[f].i(), vecTriangles[f].j())] = f;
-            edge2fid_map[std::make_pair(vecTriangles[f].j(), vecTriangles[f].k())] = f;
-            edge2fid_map[std::make_pair(vecTriangles[f].k(), vecTriangles[f].i())] = f;
+            edge2fid_map[std::make_pair(vecTriangles[i].i(), vecTriangles[i].j())] = i;
+            edge2fid_map[std::make_pair(vecTriangles[i].j(), vecTriangles[i].k())] = i;
+            edge2fid_map[std::make_pair(vecTriangles[i].k(), vecTriangles[i].i())] = i;
         }
 
         // data 초기화
@@ -54,9 +55,9 @@ namespace MeshHERepLib
         m_edge_halfedges.resize(edgeCount, -1);
 
         // 먼저 edge를 구성해준다.
-        for (int e = 0; e < edgeCount; ++e)
+        loopi(0, edgeCount)
         {
-            const MeshIOLib::Edge& edge = m_edgeList[e];
+            const MeshIOLib::Edge& edge = m_edgeList[i];
 
             // half edge 초기화 : 서로의 index가 필요해서 먼저 추가함
             MeshIOLib::index_t index_h0 = -1;
@@ -66,11 +67,11 @@ namespace MeshHERepLib
 
             // face, edge, to_vertex 정보 입력
             h0.face = Internal_FindEdge2FaceIndex(edge2fid_map, edge._vertexID[0], edge._vertexID[1]);
-            h0.edge = e;
+            h0.edge = i;
             h0.to_vertex = edge._vertexID[1];
 
             h1.face = Internal_FindEdge2FaceIndex(edge2fid_map, edge._vertexID[1], edge._vertexID[0]);
-            h1.edge = e;
+            h1.edge = i;
             h1.to_vertex = edge._vertexID[0];
 
             // opposit half 정보 입력
@@ -102,19 +103,19 @@ namespace MeshHERepLib
                 m_face_halfedges[h1.face] = index_h1;
 
             // edge2halfEdge
-            assert(m_edge_halfedges[e] == -1);
-            m_edge_halfedges[e] = index_h0;
+            assert(m_edge_halfedges[i] == -1);
+            m_edge_halfedges[i] = index_h0;
         }
 
         // boundary 정리 및 next halfEdge 정보 추가
         std::vector<MeshIOLib::index_t> boundaryHalfEdgeIndices;
-        for (int hei = 0; hei < m_halfEdges.size(); ++hei)
+        loopi(0, m_halfEdges.size())
         {
             // 바운더리 halfedge 구성
-            auto& he = m_halfEdges[hei];
+            auto& he = m_halfEdges[i];
             if (he.face == -1)
             {
-                boundaryHalfEdgeIndices.push_back(hei);
+                boundaryHalfEdgeIndices.push_back(i);
                 continue;
             }
             // next halfedge 구성
@@ -132,7 +133,7 @@ namespace MeshHERepLib
     {
         assert(&tris[0]);
         std::set<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> edgeSet;
-        for (int i = 0; i < tris.size(); ++i)
+        loopi(0, tris.size())
         {
             edgeSet.insert(std::make_pair(std::min(tris[i].i(), tris[i].j()), std::max(tris[i].i(), tris[i].j())));
             edgeSet.insert(std::make_pair(std::min(tris[i].j(), tris[i].k()), std::max(tris[i].j(), tris[i].k())));
@@ -183,7 +184,7 @@ namespace MeshHERepLib
         assert(halfedgeMap.size() != 0);
         assert(he.face != -1);
 
-        const auto& tri = m_vecTriangles[he.face];
+        const auto& tri = tris[he.face];
         MeshIOLib::index_t v1 = he.to_vertex;
         MeshIOLib::index_t v2 = -1;
         if (v1 == tri._vertexID[0])
@@ -328,7 +329,7 @@ namespace MeshHERepLib
     {
         std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> boundaryEdges;
 
-        for (size_t i =0; i < m_halfEdges.size(); ++i)
+        loopi(0, m_halfEdges.size())
         {
             if (m_halfEdges[i].face == -1)
             {

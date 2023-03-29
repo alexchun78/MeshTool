@@ -1,20 +1,20 @@
-#include "../include/Export.h"
+#include "Export.h"
 namespace MeshHERepLib
 {
     // Export DLL
-    CHalfEdgeRep* CreateHalfEdgeRep(IN const unsigned long vertexCount, IN const std::vector<MeshIOLib::Triangle>& vecTriangles)
+    CHalfEdgeRep* CreateHalfEdgeRep()
     {
-        return new CHalfEdgeRep(vertexCount, vecTriangles);
+        return new CHalfEdgeRep();
     }
 
-    MeshIOLib::index_t Build(IN CHalfEdgeRep* object)
+    MeshIOLib::index_t Build(IN CHalfEdgeRep* object, IN const unsigned long vertexListCount, IN const std::vector<MeshIOLib::Triangle>& vecTriangles)
     {
         if (object == NULL)
             return -2; // error code : -2
 
-        auto vertCnt = object->GetVertexCount();
-        auto& vecTris = object->GetTriangles();
-        bool bRtn = object->Build(vertCnt, vecTris);
+        //auto vertCnt = object->GetVertexCount();
+        //auto& vecTris = object->GetTriangles();
+        bool bRtn = object->Build(vertexListCount, vecTriangles);
         return (bRtn == true)? 1 : 0;
     }
 
@@ -26,7 +26,7 @@ namespace MeshHERepLib
         return object->GetHalfEdge(id);
     }
 
-    bool GetEdgeFromHalfEdge(CHalfEdgeRep* object, std::pair<MeshIOLib::index_t, MeshIOLib::index_t>& edge, const MeshIOLib::index_t id)
+    bool GetEdgeFromHalfEdge(IN CHalfEdgeRep* object, OUT std::pair<MeshIOLib::index_t, MeshIOLib::index_t>& edge, IN const MeshIOLib::index_t id)
     {
         if (object == NULL)
             return false;
@@ -91,7 +91,7 @@ namespace MeshHERepLib
         return true;
     }
 
-    bool GetBoundaryEdges(CHalfEdgeRep* object, std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>>& boundaryEdges)
+    bool GetBoundaryEdges(IN CHalfEdgeRep* object, OUT std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>>& boundaryEdges)
     {
         if (object == NULL)
             return false;

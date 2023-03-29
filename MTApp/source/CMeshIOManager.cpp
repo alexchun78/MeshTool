@@ -8,68 +8,40 @@ CMeshIOManager::CMeshIOManager(const HMODULE handle)
         // 외부로 참조된 instance 함수를 취득
         DLL_CREATE_MESHIO pFunc = (DLL_CREATE_MESHIO)::GetProcAddress(handle, "CreateMeshIO");
         m_CMeshIO = pFunc();
+        m_handle = handle;
     }
 }
-//
-//CMeshIOManager::CMeshIOManager(const char* path)
-//{
-//    m_dll = LoadLibraryA(path);
-//    if (m_dll != NULL)
-//    {
-//        // 외부로 참조된 instance 함수를 취득
-//        DLL_CREATE_MESHIO pFunc = (DLL_CREATE_MESHIO)::GetProcAddress(m_dll, "CreateMeshIO");
-//        m_CMeshIO = pFunc();
-//    }
-//}
 
 CMeshIOManager::~CMeshIOManager()
 {
+    if (m_CMeshIO == NULL)
+        return;
 
+    DLL_TERMINATE_MESHIO terminateFunc = (DLL_TERMINATE_MESHIO)::GetProcAddress(m_handle, "TerminateMeshIO");
+    terminateFunc(m_CMeshIO);
 }
 
-bool CMeshIOManager::LoadOBJ(const char* filename, HMODULE handle)
+bool CMeshIOManager::LoadOBJ(const char* filename)
 {
     return false;
 }
 
-bool CMeshIOManager::LoadSTL(const char* filepath, HMODULE handle)
+bool CMeshIOManager::LoadSTL(const char* filepath)
 {
-    if (handle == NULL)
+    if (m_handle == NULL)
         return false;
 
     if (m_CMeshIO == NULL)
         return false;
 
-    DLL_LOADSTL_MESHIO loadSTLFunc = (DLL_LOADSTL_MESHIO)::GetProcAddress(handle, "LoadSTL");
+    DLL_LOADSTL_MESHIO loadSTLFunc = (DLL_LOADSTL_MESHIO)::GetProcAddress(m_handle, "LoadSTL");
     loadSTLFunc(m_CMeshIO, filepath);
 
-    DLL_GETVERTEX_MESHIO getVertexListFunc = (DLL_GETVERTEX_MESHIO)::GetProcAddress(handle, "GetVertexList");
+    DLL_GETVERTEX_MESHIO getVertexListFunc = (DLL_GETVERTEX_MESHIO)::GetProcAddress(m_handle, "GetVertexList");
     m_vecVertices = getVertexListFunc(m_CMeshIO);
 
-    DLL_GETTRIANGLE_MESHIO getTriangleListFunc = (DLL_GETTRIANGLE_MESHIO)::GetProcAddress(handle, "GetTriangleList");
+    DLL_GETTRIANGLE_MESHIO getTriangleListFunc = (DLL_GETTRIANGLE_MESHIO)::GetProcAddress(m_handle, "GetTriangleList");
     m_vecTriangles = getTriangleListFunc(m_CMeshIO);
 
     return true;
 }
-
-
-//bool CMeshIOManager::LoadSTL(const char* filepath)
-//{
-//    if (m_dll == NULL)
-//        return false;
-//
-//    if (m_CMeshIO == NULL)
-//        return false;
-//
-//    DLL_LOADSTL_MESHIO loadSTLFunc = (DLL_LOADSTL_MESHIO)::GetProcAddress(m_dll, "LoadSTL");
-//    loadSTLFunc(m_CMeshIO, filepath);
-//
-//    //DLL_GETVERTEX_MESHIO getVertexListFunc = (DLL_GETVERTEX_MESHIO)::GetProcAddress(m_dll, "GetVertexList");
-//    //m_vecVertices = getVertexListFunc(m_CMeshIO);
-//
-//    //DLL_GETTRIANGLE_MESHIO getTriangleListFunc = (DLL_GETTRIANGLE_MESHIO)::GetProcAddress(m_dll, "GetTriangleList");
-//    //m_vecTriangles = getTriangleListFunc(m_CMeshIO);
-//    BOOL test = FreeLibrary(m_dll);
-//
-//    return true;
-//}

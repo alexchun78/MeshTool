@@ -33,9 +33,6 @@
     <ClCompile Include="source\CDLLManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\CMeshIOManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="zLibHalfEdgeRep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="include\CDLLManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CMeshIOManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\CHalfEdgeRep.h">

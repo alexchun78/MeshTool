@@ -159,7 +159,9 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="export\Export.cpp" />
+    <ClCompile Include="export\Export.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -170,9 +172,6 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="source\CHalfEdgeRep.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="source\CMeshIOManager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="source\Vector.cpp">
@@ -189,7 +188,6 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
     <ClInclude Include="export\Export.h" />
     <ClInclude Include="include\CDLLManager.h" />
     <ClInclude Include="include\CHalfEdgeRep.h" />
-    <ClInclude Include="include\CMeshIOManager.h" />
     <ClInclude Include="include\MeshHEData.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
