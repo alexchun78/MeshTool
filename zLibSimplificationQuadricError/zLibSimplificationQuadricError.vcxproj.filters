@@ -19,6 +19,9 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{06001b25-a659-4071-8378-9f22ef54c163}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{e5606ff1-ecf0-4225-9c2d-7b48c6065f3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -42,6 +45,9 @@
     <ClCompile Include="manager\CHEManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\zLibMeshIO\source\Vector.cpp">
+      <Filter>Header Files\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -61,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="manager\CHEManager.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\zLibMeshIO\include\Vector.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

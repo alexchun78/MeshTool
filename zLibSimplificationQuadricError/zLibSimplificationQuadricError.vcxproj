@@ -155,6 +155,9 @@ rem copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\zLibMeshIO\source\Vector.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="CMeshIOManager.cpp" />
     <ClCompile Include="export\Export.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -175,6 +178,7 @@ rem copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\zLibMeshIO\include\Vector.h" />
     <ClInclude Include="CMeshIOManager.h" />
     <ClInclude Include="export\Export.h" />
     <ClInclude Include="include\CSimplificationQuadricError.h" />

@@ -18,9 +18,9 @@ int main()
     INTRTRN_CHKNULL(handle);
 
     path = "../Common/dll/zLibHalfEdgeRep.dll";
-    CDLLManager* dllHE = new CDLLManager(path.c_str());
-    auto handleHE = dllHE->GetDLLHandle();
-    INTRTRN_CHKNULL(handleHE);
+    //CDLLManager* dllHE = new CDLLManager(path.c_str());
+    //auto handleHE = dllHE->GetDLLHandle();
+    //INTRTRN_CHKNULL(handleHE);
 
     // file import
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
@@ -33,23 +33,20 @@ int main()
     auto tris = ioManager->GetTriangleList();
     
     // do half edge process
-    CHEManager* heManager = new CHEManager(handleHE);
-    auto nRtn = heManager->Build(verts.size(), tris);
-    if (nRtn != 1)
-        return -1;
-    std::vector<MeshIOLib::index_t> neighbors;
-    heManager->FindVertexNeighborsFromVertex(neighbors, 3);
+    //CHEManager* heManager = new CHEManager(handleHE);
+    //auto nRtn = heManager->Build(verts.size(), tris);
+    //if (nRtn != 1)
+    //    return -1;
+    //std::vector<MeshIOLib::index_t> neighbors;
+    //heManager->FindVertexNeighborsFromVertex(neighbors, 3);
 
     // do simplification process
-    CSimplificationQuadricError* pSimply = new CSimplificationQuadricError(verts, tris);
+    CSimplificationQuadricError* pSimply = new CSimplificationQuadricError(path, verts, tris);
     pSimply->DoSimplification(0.5, 7);
-    // (1) 파일 임포트 ->일단 프로젝트에 저장
-    // (2) HalfEdge 화
-    // (3)
 
     // terminate
     dll->TerminateDLL();
-    dllHE->TerminateDLL();
+    //dllHE->TerminateDLL();
 
     return 0;
 }

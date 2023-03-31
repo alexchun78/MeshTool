@@ -40,7 +40,7 @@ namespace MeshIOLib
 
         double operator[](int c) const { return m[c]; }
 
-        // Determinant
+        // Determinant :3 by 3 За·ДЅД 
         double det(int a11, int a12, int a13,
             int a21, int a22, int a23,
             int a31, int a32, int a33)
@@ -48,9 +48,9 @@ namespace MeshIOLib
             double det = m[a11] * m[a22] * m[a33]
                 + m[a12] * m[a23] * m[a31]
                 + m[a13] * m[a21] * m[a32]
-                - m[a13] * m[a22] * m[a31]
-                - m[a11] * m[a23] * m[a32] 
-                - m[a12] * m[a21] * m[a33];
+                - m[a11] * m[a23] * m[a32]
+                - m[a12] * m[a21] * m[a33]
+                - m[a13] * m[a22] * m[a31];                               
             return det;
         }
 
