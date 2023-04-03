@@ -16,6 +16,15 @@ CSimplificationQuadricError::CSimplificationQuadricError(const std::string dllPa
 
     // (3) halfedge manager 생성
     m_halfEdgeManager = new CHEManager(handle);
+
+    //// [추가] normal 값이 없으면, noraml을 생산한다.
+    //loopi(0, m_triangles.size())
+    //{
+    //    if (m_triangles[i]._normal != Vec3())
+    //        continue;
+    //    // normal vector를 구하지 않은 경우만 계산
+    //}
+
 }
 
 CSimplificationQuadricError::~CSimplificationQuadricError()
@@ -101,7 +110,7 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
     }
     
     // [3] Main Algorithm
-    std::vector<int> deleted0, deleted1;
+    std::vector<int> vecDeleted0, vecDeleted1;
     int deletedCount = 0;
     int triCount = m_outTriangles.size();
 
@@ -142,14 +151,43 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
                 size_t vid0 = tri._vertexID[j];
                 size_t vid1 = tri._vertexID[(j+1)%3];
 
-                MeshIOLib::Vertex& v0 = m_outVertices[tri._vertexID[j]];
-                MeshIOLib::Vertex& v1 = m_outVertices[tri._vertexID[(j+1)%3]];
+                MeshIOLib::Vertex& v0 = m_outVertices[vid0];
+                MeshIOLib::Vertex& v1 = m_outVertices[vid1];
 
                 // Border Checking
                 if (m_halfEdgeManager->IsBoundaryVertex(vid0) != m_halfEdgeManager->IsBoundaryVertex(vid1))
                     continue;
 
                 // Compute Vertex to Edge Collapse 
+                Vec3 vertexErrorPos;
+                CalQuadricError(vertexErrorPos, vid0, vid1);
+
+                // Flipped triangle인지 검사 
+                // // vertex와 인접한 삼각형 리스트를 가져온다.
+                std::vector<MeshIOLib::index_t> triIDs_vid0;
+                bool bRtn = m_halfEdgeManager->FindFaceNeighborsFromVertex(triIDs_vid0, vid0);
+                if (bRtn == false)
+                    continue;
+                
+                vecDeleted0.resize(triIDs_vid0.size());
+                if (IsFlipped(vecDeleted0, triIDs_vid0, vertexErrorPos, vid0, vid1, v0))
+                    continue;
+
+                // // vertex와 인접한 삼각형 리스트를 가져온다.
+                std::vector<MeshIOLib::index_t> triIDs_vid1;
+                bRtn = m_halfEdgeManager->FindFaceNeighborsFromVertex(triIDs_vid1, vid1);
+                if (bRtn == false)
+                    continue;
+
+                vecDeleted1.resize(triIDs_vid1.size());
+                if (IsFlipped(vecDeleted1, triIDs_vid1, vertexErrorPos, vid0, vid1, v1))
+                    continue;
+
+                // Flipped triangle이 아니면 edge 제거
+                v0._position = vertexErrorPos;
+                v0._q = v1._q + v0._q;
+
+
 
 
             }
@@ -168,6 +206,7 @@ void CSimplificationQuadricError::UpdateMesh(const int iter)
         return;
 
     int dst = 0;
+    int backupCnt = m_outTriangles.size();
     loopi(0, m_outTriangles.size())
     {
         if (!m_outTriangles[i]._deleted)
@@ -178,6 +217,8 @@ void CSimplificationQuadricError::UpdateMesh(const int iter)
     m_outTriangles.resize(dst);
     // [NOTE] 
     // [TODO] 여기서 이웃 정보 업데이트가 필요하지 않을까?
+    if(dst != backupCnt)
+        m_halfEdgeManager->Build(m_outVertices.size(), m_outTriangles);
 }
 
 void CSimplificationQuadricError::ComposeSymetricMatrix(std::vector<MeshIOLib::Vertex>& verts, std::vector<MeshIOLib::Triangle>& tris)
@@ -195,6 +236,7 @@ void CSimplificationQuadricError::ComposeSymetricMatrix(std::vector<MeshIOLib::V
     loopi(0, tris.size())
     {
         MeshIOLib::Triangle& triangle = tris[i];
+
         MeshIOLib::Vertex& p = verts[triangle.i()];
         MeshIOLib::Vertex& q = verts[triangle.j()];
         MeshIOLib::Vertex& r = verts[triangle.k()];
@@ -260,3 +302,78 @@ double CSimplificationQuadricError::CalVertexError(MeshIOLib::SymetricMatrix q, 
         + 2 * q[6] * y + 2 * q[8] * z + q[9];
 }
 
+bool CSimplificationQuadricError::IsFlipped(std::vector<int>& vecDeleted, std::vector<MeshIOLib::index_t>& neighborTriangles, const Vec3& p, const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0)
+{
+    if (m_halfEdgeManager == NULL)
+    {
+        // 제대로 계산할 수 없다.
+        return true;
+    }
+
+    if (neighborTriangles.size() == 0)
+        return false;
+    
+    // 삼각형들이 뒤집힌 상태인지 확인한다.
+    loopi(0, neighborTriangles.size())
+    {
+        MeshIOLib::Triangle& tri = m_outTriangles[neighborTriangles[i]];
+        if (tri._deleted)
+            continue;
+
+        // 다음 버텍스의 인덱스를 구한다.
+        auto vid1_tmp = tri._vertexID[(v0._vid + 1) % 3];
+        auto vid2_tmp = tri._vertexID[(v0._vid + 2) % 3];
+
+        // 해당하는 인덱스는 찾아서 해당 Edge를 합쳐야 한다.
+        if (vid1_tmp == vid1 || vid2_tmp == vid1)
+        {
+            vecDeleted[i] = 1;
+            continue;
+        }
+
+        // 겹치지 않으면, vertex error vector에서 향하는 vector 구함
+        Vec3 d1 = m_vertices[vid1_tmp]._position - p;
+        Vec3 d2 = m_vertices[vid2_tmp]._position - p;
+        Normalize(d1);
+        Normalize(d2);
+
+        // 방향이 겹치면,
+        if (fabs(Dot(d1, d2)) > 0.999f) 
+            return true;
+
+        Vec3 normal = Cross(d1, d2);
+        Normalize(normal);
+        vecDeleted[i] = 0;
+
+        // 수직 관계의 벡터에 대한 예외처리
+        if (Dot(normal, tri._normal) < 0.2)
+            return true;
+    }
+    return false;
+}
+
+// Update triangle connections and edge error after a edge is collapsed
+void CSimplificationQuadricError::update_triangles(int vid, std::vector<MeshIOLib::index_t>& neighborTriangles, std::vector<int>& vecDeleted, int& deletedTriCount)
+{
+    Vec3 p;
+    loopk(0, neighborTriangles.size())
+    {
+        //Triangle& tri = m_outTriangles[r.tid];
+        //if (tri._deleted)
+        //    continue;
+        //if (vecDeleted[k])
+        //{
+        //    tri.deleted = 1;
+        //    deletedTriCount++;
+        //    continue;
+        //}
+
+        //tri._vertexID[r.tvertex] = i0; // 이웃 삼각형 내에서 vertex 자신의 위치를 찾는 함수가 필요하다. 
+        //t.dirty = 1;
+        //t.err[0] = calculate_error(t.v[0], t.v[1], p);
+        //t.err[1] = calculate_error(t.v[1], t.v[2], p);
+        //t.err[2] = calculate_error(t.v[2], t.v[0], p);
+        //t.err[3] = min(t.err[0], min(t.err[1], t.err[2]));
+        //refs.push_back(r);
+    }
+}
