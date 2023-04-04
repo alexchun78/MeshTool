@@ -189,13 +189,43 @@ namespace MeshIOLib
 
     void CMeshIO::WriteOBJ(const char* filename)
     {
+        WriteOBJ(filename, m_vecVertices, m_vecTriangles);
+    }
 
+    void CMeshIO::WriteOBJ(const char* filename, const std::vector<Vertex>& vecVerts, const std::vector<Triangle>& vecTris)
+    {
+        // 파일 오픈
+        FILE* file;
+        if ((::fopen_s(&file, filename, "w")) != 0)
+        {
+            std::cout << "write_obj: can't write data file " << filename << "." << std::endl;
+        }
+        if (file == NULL)
+            return;
+
+        // 순회하면서 작성
+        loopi(0, m_vecVertices.size())
+        {
+            fprintf(file, "v %g %g %g\n", vecVerts[i]._position.x, vecVerts[i]._position.y, vecVerts[i]._position.z);
+        }
+        loopi(0, m_vecTriangles.size())
+        {
+            fprintf(file, "f %d %d %d\n", vecTris[i]._vertexID[0] + 1, vecTris[i]._vertexID[1] + 1, vecTris[i]._vertexID[2] + 1);
+        }
+        
+        
     }
 
     void CMeshIO::WriteSTL(const char* filename)
     {
 
     }
+
+    void CMeshIO::WriteSTL(const char* filename, const std::vector<Vertex>& vecVerts, const std::vector<Triangle>& vecTris)
+    {
+
+    }
+
 
     std::vector<Vertex> CMeshIO::LoadSTL_Vertices(const char* filename)
     {

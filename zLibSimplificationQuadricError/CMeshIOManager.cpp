@@ -45,3 +45,16 @@ bool CMeshIOManager::LoadSTL(const char* filepath)
 
     return true;
 }
+
+void CMeshIOManager::WriteOBJWithMeshData(const char* filename, const std::vector<MeshIOLib::Vertex>& vecVerts, const std::vector<MeshIOLib::Triangle>& vecTris)
+{
+    if (m_handle == NULL)
+        return;
+
+    if (m_CMeshIO == NULL)
+        return;
+
+    DLL_WRITEOBJWITHMESHDATA_MESHIO WriteOBJFunc = (DLL_WRITEOBJWITHMESHDATA_MESHIO)::GetProcAddress(m_handle, "WriteOBJWithMeshData");
+    WriteOBJFunc(m_CMeshIO, filename, vecVerts, vecTris);
+    return;
+}

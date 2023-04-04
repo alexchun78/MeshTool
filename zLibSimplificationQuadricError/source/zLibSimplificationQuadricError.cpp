@@ -44,6 +44,31 @@ int main()
     CSimplificationQuadricError* pSimply = new CSimplificationQuadricError(path, verts, tris);
     pSimply->DoSimplification(0.5, 7);
 
+    std::vector<MeshIOLib::Vertex> _outputVerts;
+    std::vector<MeshIOLib::Triangle> _outputTris;
+    pSimply->GetSimplificationOuputData(_outputVerts, _outputTris);
+
+   // ioManager->WriteOBJWithMeshData("C:\\_dev\\MeshTool\\splitedBox_testOutput.obj", _outputVerts, _outputTris);
+
+    // 파일 오픈
+    FILE* file;
+    if ((::fopen_s(&file, "C:\\_dev\\MeshTool\\splitedBox_testOutput.obj", "w")) != 0)
+    {
+        std::cout << "write_obj: can't write data file " << "C:\\_dev\\MeshTool\\splitedBox_testOutput.obj" << "." << std::endl;
+    }
+    if (file == NULL)
+        return -1;
+
+    // 순회하면서 작성
+    for(int i = 0; i < _outputVerts.size(); i++)
+    {
+        fprintf(file, "v %g %g %g\n", _outputVerts[i]._position.x, _outputVerts[i]._position.y, _outputVerts[i]._position.z);
+    }
+    for (int i = 0; i < _outputTris.size(); i++)
+    {
+        fprintf(file, "f %d %d %d\n", _outputTris[i]._vertexID[0] + 1, _outputTris[i]._vertexID[1] + 1, _outputTris[i]._vertexID[2] + 1);
+    }
+
     // terminate
     dll->TerminateDLL();
     //dllHE->TerminateDLL();

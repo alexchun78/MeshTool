@@ -9,6 +9,13 @@ public:
 
     bool DoSimplification(const float reductionRate, const float agressive);
 
+public:
+    void GetSimplificationOuputData(std::vector<MeshIOLib::Vertex>& verts, std::vector<MeshIOLib::Triangle>& tris)
+    {
+        verts = m_outVertices;
+        tris = m_outTriangles;
+    }
+
 private:
     bool LoadMeshData(const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris);
     bool Internal_Simplification(const int targetCount, const double agressive);
@@ -23,6 +30,7 @@ private: // 이해가 안되는 기능들은 아래 참고 사이트의 구현 코드 사용함.
     void UpdateTriangles(int& deletedTriCount, const int vid, const std::vector<MeshIOLib::index_t>& neighborTriangles, const std::vector<size_t> vidList, const std::vector<int>& vecDeleted);
     void FindVidListFromFaceList(std::vector<size_t>& vidList, const std::vector<MeshIOLib::index_t>& neighborTriangles, const MeshIOLib::index_t vertexIndex);
     void CompactMesh();
+
 private:
     // input
     std::vector<MeshIOLib::Vertex> m_vertices;

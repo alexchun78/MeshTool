@@ -18,7 +18,10 @@ namespace MeshIOLib
         void LoadSTL(const char* filename);
 
         void WriteOBJ(const char* filename);
+        void WriteOBJ(const char* filename, const std::vector<Vertex>& vecVerts, const std::vector<Triangle>& vecTris);
+        
         void WriteSTL(const char* filename);
+        void WriteSTL(const char* filename, const std::vector<Vertex>& vecVerts, const std::vector<Triangle>& vecTris);
 
     public:
         inline std::vector<Triangle> GetTriangleList() {
@@ -27,7 +30,12 @@ namespace MeshIOLib
         inline std::vector<Vertex> GetVertexList() {
             return m_vecVertices;
         }
-
+        inline void SetTriangleList(std::vector<Triangle> tris) {
+            m_vecTriangles = tris;
+        }
+        inline void SetVertexList(std::vector<Vertex> verts) {
+            m_vecVertices = verts;
+        }
     private:
         // thanks to https://github.com/mkeeter/fstl/blob/master/src/loader.cpp
         std::vector<Vertex> LoadSTL_Vertices(const char* filename);

@@ -10,9 +10,11 @@ public:
 
     bool LoadOBJ(const char* filename);
     bool LoadSTL(const char* filename);
+
+    void WriteOBJWithMeshData(const char* filename, const std::vector<MeshIOLib::Vertex>& vecVerts, const std::vector<MeshIOLib::Triangle>& vecTris);
     //bool LoadSTL(const char* filename);
    // void TerminateDLL();
-
+        
 public:
     inline std::vector<MeshIOLib::Triangle> GetTriangleList() {
         return m_vecTriangles;

@@ -15,6 +15,20 @@ namespace MeshIOLib
         object->LoadSTL(filename);
     }
 
+    void WriteOBJ(IN CMeshIO* object, IN const char* filename)
+    {
+        if (object == NULL)
+            return
+        object->WriteOBJ(filename);
+    }
+
+    void WriteOBJWithMeshData(IN CMeshIO* object, IN const char* filename, IN const std::vector<Vertex>& vecVerts, IN const std::vector<Triangle>& vecTris)
+    {
+        if (object == NULL)
+            return
+        object->WriteOBJ(filename, vecVerts, vecTris);
+    }
+
     void TerminateMeshIO(IN CMeshIO* object)
     {
         // ∞¥√º «ÿ¡¶

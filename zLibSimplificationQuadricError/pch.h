@@ -16,6 +16,7 @@
 // // MeshIO
 typedef MeshIOLib::CMeshIO* (*DLL_CREATE_MESHIO)();
 typedef void (*DLL_LOADSTL_MESHIO)(MeshIOLib::CMeshIO* object, const char* filename);
+typedef void(*DLL_WRITEOBJWITHMESHDATA_MESHIO)(IN MeshIOLib::CMeshIO* object, IN const char* filename, IN const std::vector<MeshIOLib::Vertex>& vecVerts, IN const std::vector<MeshIOLib::Triangle>& vecTris);
 typedef std::vector<MeshIOLib::Vertex>(*DLL_GETVERTEX_MESHIO)(MeshIOLib::CMeshIO* object);
 typedef std::vector<MeshIOLib::Triangle>(*DLL_GETTRIANGLE_MESHIO)(MeshIOLib::CMeshIO* object);
 typedef void(*DLL_TERMINATE_MESHIO)(MeshIOLib::CMeshIO* object);
