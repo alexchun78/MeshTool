@@ -20,7 +20,9 @@ private: // 이해가 안되는 기능들은 아래 참고 사이트의 구현 코드 사용함.
     double CalQuadricError(Vec3& p, const size_t v1, const size_t v2); // 크로네커 델타 (텐서) 구하는 공식
     double CalVertexError(MeshIOLib::SymetricMatrix q, Vec3 v);
     bool IsFlipped(std::vector<int>& vecDeleted, std::vector<MeshIOLib::index_t>& neighborTriangles, const Vec3& p, const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0);
-    void update_triangles(int vid, std::vector<MeshIOLib::index_t>& neighborTriangles, std::vector<int>& vecDeleted, int& deletedTriCount);
+    void UpdateTriangles(int& deletedTriCount, const int vid, const std::vector<MeshIOLib::index_t>& neighborTriangles, const std::vector<size_t> vidList, const std::vector<int>& vecDeleted);
+    void FindVidListFromFaceList(std::vector<size_t>& vidList, const std::vector<MeshIOLib::index_t>& neighborTriangles, const MeshIOLib::index_t vertexIndex);
+    void CompactMesh();
 private:
     // input
     std::vector<MeshIOLib::Vertex> m_vertices;

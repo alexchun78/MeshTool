@@ -69,6 +69,15 @@ namespace MeshIOLib
             m[8] += n[8];   m[9] += n[9];
             return *this;
         }
+
+        SymetricMatrix& operator = (const SymetricMatrix& n)
+        {
+            m[0] = n[0];   m[1] = n[1];   m[2] = n[2];   m[3] = n[3];
+            m[4] = n[4];   m[5] = n[5];   m[6] = n[6];   m[7] = n[7];
+            m[8] = n[8];   m[9] = n[9];
+            return *this;
+        }
+
     };
 
     typedef long index_t;
@@ -116,9 +125,9 @@ namespace MeshIOLib
         Vec3 _position;
         size_t _triangleID;
         size_t _vid; // _triangleID의 face 내에서 vertex 위치 (0,1,2)
+        bool _bReMesh = false;
         std::vector<size_t> _ptrTriIDs; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         std::vector<size_t> _ptrVids; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
-
         SymetricMatrix _q;
 
         bool operator==(const vertex_tag& rhs) const
