@@ -1,0 +1,15 @@
+﻿  CMeshIO.cpp
+C:\_dev\MeshTool\zLibMeshIO\source\CMeshIO.cpp(123,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibMeshIO\source\CMeshIO.cpp(147,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibMeshIO\source\CMeshIO.cpp(162,13): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibMeshIO\source\CMeshIO.cpp(170,13): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibMeshIO\source\CMeshIO.cpp(207,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibMeshIO\source\CMeshIO.cpp(211,9): warning C4018: '<': signed/unsigned mismatch
+  zLibMeshIO.vcxproj -> C:\_dev\MeshTool\Common\bin\Debug\zLibMeshIO.dll
+  C:\_dev\MeshTool\Common\bin\Debug\zLibHalfEdgeRep.dll
+  C:\_dev\MeshTool\Common\bin\Debug\zLibMeshIO.dll
+          2개 파일이 복사되었습니다.
+  C:\_dev\MeshTool\zLibMeshIO\include\CMeshIO.h
+  C:\_dev\MeshTool\zLibMeshIO\include\CMeshIOData.h
+  C:\_dev\MeshTool\zLibMeshIO\include\Vector.h
+          3개 파일이 복사되었습니다.

@@ -1,0 +1,28 @@
+﻿  pch.cpp
+C:\_dev\MeshTool\Common\include\CMeshIOData.h(3,1): warning C4005: 'loopi': macro redefinition
+C:\_dev\MeshTool\zLibHalfEdgeRep\pch.h(10): message : see previous definition of 'loopi'
+C:\_dev\MeshTool\Common\include\CMeshIOData.h(4,1): warning C4005: 'loopj': macro redefinition
+C:\_dev\MeshTool\zLibHalfEdgeRep\pch.h(11): message : see previous definition of 'loopj'
+C:\_dev\MeshTool\Common\include\CMeshIOData.h(5,1): warning C4005: 'loopk': macro redefinition
+C:\_dev\MeshTool\zLibHalfEdgeRep\pch.h(12): message : see previous definition of 'loopk'
+  Export.cpp
+C:\_dev\MeshTool\zLibHalfEdgeRep\export\Export.cpp(24): warning C4172: returning address of local variable or temporary
+  CHalfEdgeRep.cpp
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(40,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(55,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(109,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(133,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(233,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(239,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(255,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(271,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(290,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(306,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibHalfEdgeRep\source\CHalfEdgeRep.cpp(329,9): warning C4018: '<': signed/unsigned mismatch
+  zLibHalfEdgeRep.vcxproj -> C:\_dev\MeshTool\Common\bin\Debug\zLibHalfEdgeRep.dll
+  C:\_dev\MeshTool\Common\bin\Debug\zLibHalfEdgeRep.dll
+  C:\_dev\MeshTool\Common\bin\Debug\zLibMeshIO.dll
+          2개 파일이 복사되었습니다.
+  C:\_dev\MeshTool\zLibHalfEdgeRep\include\CHalfEdgeRep.h
+  C:\_dev\MeshTool\zLibHalfEdgeRep\include\MeshHEData.h
+          2개 파일이 복사되었습니다.

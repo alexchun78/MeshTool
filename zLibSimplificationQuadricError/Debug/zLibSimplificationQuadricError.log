@@ -1,0 +1,18 @@
+﻿  CSimplificationQuadricError.cpp
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(71,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(90,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(101,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(128,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(137,9): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(248,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(268,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(274,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(307,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(308,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(309,24): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(357,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(410,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(439,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(456,5): warning C4018: '<': signed/unsigned mismatch
+C:\_dev\MeshTool\zLibSimplificationQuadricError\source\CSimplificationQuadricError.cpp(474,5): warning C4018: '<': signed/unsigned mismatch
+  zLibSimplificationQuadricError.vcxproj -> C:\_dev\MeshTool\Common\bin\Debug\zLibSimplificationQuadricError.exe

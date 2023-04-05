@@ -221,13 +221,17 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
                 UpdateTriangles(deletedCount, vid0, triIDs_vid0, vidList0, vecDeleted0);
                 UpdateTriangles(deletedCount, vid0, triIDs_vid1, vidList1, vecDeleted1);
                 
+                auto& debug_verts = m_outVertices;
+                auto& debug_tris = m_outTriangles;
                 break;
             }
             if (triCount - deletedCount <= targetCount)
+            {
+                auto nDebugCount = iter;
                 break;
+            }
+                
         }
-        if (deletedCount <= 0)
-            break;
     }
 
     CompactMesh();
@@ -376,7 +380,7 @@ bool CSimplificationQuadricError::IsFlipped(std::vector<int>& vecDeleted, std::v
             vecDeleted[i] = 1;
             continue;
         }
-
+        // 20번째  vertex 값이 다르다
         // 겹치지 않으면, vertex error vector에서 향하는 vector 구함
         Vec3 d1 = m_vertices[vid1_tmp]._position - p;
         Vec3 d2 = m_vertices[vid2_tmp]._position - p;

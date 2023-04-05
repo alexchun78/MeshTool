@@ -25,7 +25,7 @@ int main()
     // file import
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
     {
-        bool bRtn = ioManager->LoadSTL("..\\splitedBox.stl");
+        bool bRtn = ioManager->LoadSTL("..\\subdividedBox.stl");
         if (bRtn == false)
             return -1;
     }
@@ -52,9 +52,9 @@ int main()
 
     // ÆÄÀÏ ¿ÀÇÂ
     FILE* file;
-    if ((::fopen_s(&file, "C:\\_dev\\MeshTool\\splitedBox_testOutput.obj", "w")) != 0)
+    if ((::fopen_s(&file, "C:\\_dev\\MeshTool\\subdividedBox_testOutput.obj", "w")) != 0)
     {
-        std::cout << "write_obj: can't write data file " << "C:\\_dev\\MeshTool\\splitedBox_testOutput.obj" << "." << std::endl;
+        std::cout << "write_obj: can't write data file " << "C:\\_dev\\MeshTool\\subdividedBox_testOutput.obj" << "." << std::endl;
     }
     if (file == NULL)
         return -1;
