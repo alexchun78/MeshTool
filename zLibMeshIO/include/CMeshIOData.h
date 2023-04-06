@@ -126,7 +126,7 @@ namespace MeshIOLib
         size_t _triangleID;
         size_t _vid; // _triangleID의 face 내에서 vertex 위치 (0,1,2)
         bool _bReMesh = false;
-        std::vector<size_t> _ptrTriIDs; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
+        std::vector<size_t> _ptrTriIDs; // 인접한 triangle id 리스트 
         std::vector<size_t> _ptrVids; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         SymetricMatrix _q;
 

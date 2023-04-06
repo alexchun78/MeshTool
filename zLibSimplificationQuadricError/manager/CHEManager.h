@@ -9,6 +9,7 @@ public:
 
 public:
     MeshIOLib::index_t Build(IN const unsigned long vertexListCount, IN const std::vector<MeshIOLib::Triangle>& vecTriangles);
+    MeshIOLib::index_t Build2(IN const unsigned long vertexListCount, IN const std::vector<MeshIOLib::Triangle>& vecTriangles, IN bool bSimplification);
     const MeshHERepLib::HalfEdge& GetHalfEdge(IN const MeshIOLib::index_t id);
     bool GetEdgeFromHalfEdge(std::pair<MeshIOLib::index_t, MeshIOLib::index_t>& edge, const MeshIOLib::index_t id);
     MeshIOLib::index_t GetHalfEdgeIndexFromEdge(IN const MeshIOLib::index_t& v1, IN const MeshIOLib::index_t& v2);
