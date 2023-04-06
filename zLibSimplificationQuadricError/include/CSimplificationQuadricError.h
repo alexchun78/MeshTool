@@ -30,6 +30,7 @@ private: // 이해가 안되는 기능들은 아래 참고 사이트의 구현 코드 사용함.
     void UpdateTriangles(int& deletedTriCount, const int vid, const std::vector<MeshIOLib::index_t>& neighborTriangles, const std::vector<size_t> vidList, const std::vector<int>& vecDeleted);
     void FindVidListFromFaceList(std::vector<size_t>& vidList, const std::vector<MeshIOLib::index_t>& neighborTriangles, const MeshIOLib::index_t vertexIndex);
     void CompactMesh();
+    void CompactMesh2(const int iter);
 
 private:
     // input

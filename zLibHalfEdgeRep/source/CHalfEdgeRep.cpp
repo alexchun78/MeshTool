@@ -191,6 +191,7 @@ namespace MeshHERepLib
         else if (v1 == tri._vertexID[2])
             v2 = tri._vertexID[0];
 
+        // debug
         assert(v2 != -1);
 
         return halfedgeMap[std::make_pair(v1, v2)];

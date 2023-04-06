@@ -123,6 +123,7 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
         // [2-1] 메쉬 구조 업데이트 : triangle list 조정
         if (iter % 5 == 0)
             UpdateMesh(iter);
+        //CompactMesh2(iter);
 
         // [2-2] 더티 플래그 초기화
         loopi(0, m_outTriangles.size())
@@ -133,9 +134,11 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
         double threshold = 0.000000001 * pow(double(iter + 3), agressive);
 
         //printf("iteration %d - triangles %d threshold %g\n", iteration, triangle_count - deleted_triangles, threshold);
-
+        if (iter == 1)
+            auto d = 0;
         loopi(0, m_outTriangles.size())
         {
+            auto& testTri = m_outTriangles[18];
             MeshIOLib::Triangle& tri = m_outTriangles[i];
             if (tri._error[3] >= threshold)
                 continue;
@@ -229,8 +232,7 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
             {
                 auto nDebugCount = iter;
                 break;
-            }
-                
+            }       
         }
     }
 
@@ -382,8 +384,8 @@ bool CSimplificationQuadricError::IsFlipped(std::vector<int>& vecDeleted, std::v
         }
         // 20번째  vertex 값이 다르다
         // 겹치지 않으면, vertex error vector에서 향하는 vector 구함
-        Vec3 d1 = m_vertices[vid1_tmp]._position - p;
-        Vec3 d2 = m_vertices[vid2_tmp]._position - p;
+        Vec3 d1 = m_outVertices[vid1_tmp]._position - p;
+        Vec3 d2 = m_outVertices[vid2_tmp]._position - p;
         Normalize(d1);
         Normalize(d2);
 
@@ -480,4 +482,47 @@ void CSimplificationQuadricError::CompactMesh()
         }
     }
     m_outVertices.resize(dst);
+
+    //m_halfEdgeManager->Build(m_outVertices.size(), m_outTriangles);
+}
+
+void CSimplificationQuadricError::CompactMesh2(const int iter)
+{
+    if (iter == 0)
+        return;
+
+    size_t dst = 0;
+    size_t backupCnt = m_outTriangles.size();
+
+    loopi(0, m_outTriangles.size())
+    {
+        MeshIOLib::Triangle& tri = m_outTriangles[i];
+        if (!tri._deleted)
+        {
+            m_outTriangles[dst] = tri;
+            loopj(0, 3)
+            {
+                m_outVertices[tri._vertexID[j]]._bReMesh = true;
+                m_outVertices[tri._vertexID[j]]._triangleID = dst;
+                m_outVertices[tri._vertexID[j]]._vid = j;
+            }
+            dst++;
+        }
+    }
+    m_outTriangles.resize(dst);
+
+    dst = 0;
+    loopi(0, m_outVertices.size())
+    {
+        auto& vert = m_outVertices[i];
+        if (vert._bReMesh)
+        {
+            m_outVertices[dst++] = vert;
+        }
+    }
+    m_outVertices.resize(dst);
+    // [NOTE] 
+    // [TODO] 여기서 이웃 정보 업데이트가 필요하지 않을까?
+    if (dst != backupCnt)
+        m_halfEdgeManager->Build(m_outVertices.size(), m_outTriangles);
 }
