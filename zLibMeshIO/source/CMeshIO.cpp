@@ -176,6 +176,8 @@ namespace MeshIOLib
             // 불필요한 데이터 삭제 : 만약 필요하다면 추후 되돌리기
             prevVertex._ptrTriIDs.clear();
             prevVertex._ptrVids.clear();
+            prevVertex._vid = 0;
+            prevVertex._triangleID = 0;
             m_vecVertices.push_back(prevVertex);
 
             // 임시 저장된 데이터들을 삭제한다.

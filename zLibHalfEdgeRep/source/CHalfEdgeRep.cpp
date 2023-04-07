@@ -2,7 +2,6 @@
 #include "../include/CHalfEdgeRep.h"
 #include <cassert>
 #include <set>
-#define NDEBUG 1
 namespace MeshHERepLib
 {
     CHalfEdgeRep::CHalfEdgeRep()
@@ -11,133 +10,6 @@ namespace MeshHERepLib
 
     CHalfEdgeRep::~CHalfEdgeRep()
     {
-    }
-
-    bool CHalfEdgeRep::Build2(const unsigned long vertexListCount, const std::vector<MeshIOLib::Triangle>& vecTriangles, bool bSimpification)
-    {
-        // 예외처리 (0이면 error)
-        assert(vertexListCount);
-        assert(vecTriangles.size());
-
-        // edge list(중복 없음) 구성
-        Internal_GenUnOrderedEdgeFromTriangles(m_edgeList, vecTriangles);
-        assert(m_edgeList.size());
-
-        auto vertCount = vertexListCount;
-        auto edgeCount = m_edgeList.size();
-        auto faceCount = vecTriangles.size();
-
-        // triangle을 순회하며 edge와 face id를 매핑한다.
-        Edge2Index_map edge2fid_map;
-
-        loopi(0, faceCount)
-        {
-            edge2fid_map[std::make_pair(vecTriangles[i].i(), vecTriangles[i].j())] = i;
-            edge2fid_map[std::make_pair(vecTriangles[i].j(), vecTriangles[i].k())] = i;
-            edge2fid_map[std::make_pair(vecTriangles[i].k(), vecTriangles[i].i())] = i;
-        }
-
-        // data 초기화
-        Internal_Clear();
-        m_halfEdges.reserve(edgeCount * 2);
-        m_vertex_halfedges.resize(vertCount, -1);
-        m_face_halfedges.resize(faceCount, -1);
-        m_edge_halfedges.resize(edgeCount, -1);
-
-        // 먼저 edge를 구성해준다.
-        loopi(0, edgeCount)
-        {
-            const MeshIOLib::Edge& edge = m_edgeList[i];
-
-            // half edge 초기화 : 서로의 index가 필요해서 먼저 추가함
-            MeshIOLib::index_t index_h0 = -1;
-            MeshHERepLib::HalfEdge& h0 = Internal_AddBlankHalfEdge(index_h0, m_halfEdges);
-            MeshIOLib::index_t index_h1 = -1;
-            MeshHERepLib::HalfEdge& h1 = Internal_AddBlankHalfEdge(index_h1, m_halfEdges);
-
-            // face, edge, to_vertex 정보 입력
-            h0.face = Internal_FindEdge2FaceIndex(edge2fid_map, edge._vertexID[0], edge._vertexID[1]);
-            h0.edge = i;
-            h0.to_vertex = edge._vertexID[1];
-
-            h1.face = Internal_FindEdge2FaceIndex(edge2fid_map, edge._vertexID[1], edge._vertexID[0]);
-            h1.edge = i;
-            h1.to_vertex = edge._vertexID[0];
-
-            // opposit half 정보 입력
-            h0.opposite_he = index_h1;
-            h1.opposite_he = index_h0;
-
-            // edge 연결 map 저장
-            if (!bSimpification)
-            {
-                assert(m_edge2HalfEdgeMap.find(std::make_pair(edge._vertexID[0], edge._vertexID[1])) == m_edge2HalfEdgeMap.end());
-                assert(m_edge2HalfEdgeMap.find(std::make_pair(edge._vertexID[1], edge._vertexID[0])) == m_edge2HalfEdgeMap.end());
-                m_edge2HalfEdgeMap[std::make_pair(edge._vertexID[0], edge._vertexID[1])] = index_h0;
-                m_edge2HalfEdgeMap[std::make_pair(edge._vertexID[1], edge._vertexID[0])] = index_h1;
-            }
-            else
-            {
-                if (m_edge2HalfEdgeMap.find(std::make_pair(edge._vertexID[0], edge._vertexID[1])) != m_edge2HalfEdgeMap.end())
-                {
-                    m_edge2HalfEdgeMap[std::make_pair(edge._vertexID[0], edge._vertexID[1])] = index_h0;
-                }
-                if (m_edge2HalfEdgeMap.find(std::make_pair(edge._vertexID[1], edge._vertexID[0])) == m_edge2HalfEdgeMap.end())
-                {
-                    m_edge2HalfEdgeMap[std::make_pair(edge._vertexID[1], edge._vertexID[0])] = index_h1;
-                }
-            }
-
-            // 나머지 접근 정보 정리
-            /*
-            만약 하프에지에 의해 가리켜지는 버텍스에 나가는 하프에지가 없다면,
-            반대쪽 하프에지를 저장한다.
-            또한, 만약 버텍스가 바운더리 버텍스라면, 나가는 하프에지가 바운더리 하프에지이다.
-            */
-            // vertex2halfEdge
-            if (m_vertex_halfedges[h0.to_vertex] == -1 || h1.face == -1)
-                m_vertex_halfedges[h0.to_vertex] = h0.opposite_he;
-            if (m_vertex_halfedges[h1.to_vertex] == -1 || h0.face == -1)
-                m_vertex_halfedges[h1.to_vertex] = h1.opposite_he;
-
-            // face2halfEdge
-            if (h0.face != -1 && m_face_halfedges[h0.face] == -1)
-                m_face_halfedges[h0.face] = index_h0;
-            if (h1.face != -1 && m_face_halfedges[h1.face] == -1)
-                m_face_halfedges[h1.face] = index_h1;
-
-            // edge2halfEdge
-            if (!bSimpification)
-            {
-                assert(m_edge_halfedges[i] == -1);
-                m_edge_halfedges[i] = index_h0;
-            }
-            else if(m_edge_halfedges[i] != -1)
-            {
-                m_edge_halfedges[i] = index_h0;
-            }            
-        }
-
-        // boundary 정리 및 next halfEdge 정보 추가
-        std::vector<MeshIOLib::index_t> boundaryHalfEdgeIndices;
-        loopi(0, m_halfEdges.size())
-        {
-            // 바운더리 halfedge 구성
-            auto& he = m_halfEdges[i];
-            if (he.face == -1)
-            {
-                boundaryHalfEdgeIndices.push_back(i);
-                continue;
-            }
-            // next halfedge 구성
-            he.next_he = Internal_AddNextHalfEdge(he, vecTriangles, m_edge2HalfEdgeMap);
-        }
-
-        // butterfly vertex : 특정 vertex에서 나오는 halfEdge 개수가 다수인 경우
-        // [NOTE] half-edge 구조에서는 butterfly vertex 허용 안함 -> 다음 halfEdge를 임의로 1개로 지정
-        Internal_HandlingButterFlyVertices(m_halfEdges, boundaryHalfEdgeIndices);
-
-        return true;
     }
 
     /*****
@@ -215,10 +87,6 @@ namespace MeshHERepLib
             또한, 만약 버텍스가 바운더리 버텍스라면, 나가는 하프에지가 바운더리 하프에지이다.
             */
             // vertex2halfEdge
-            if (h0.to_vertex == m_vertex_halfedges.size() || h1.to_vertex == m_vertex_halfedges.size())
-            {
-                int debugNum = 1;
-            }
             if (m_vertex_halfedges[h0.to_vertex] == -1 || h1.face == -1)
                 m_vertex_halfedges[h0.to_vertex] = h0.opposite_he;
             if (m_vertex_halfedges[h1.to_vertex] == -1 || h0.face == -1)
@@ -323,9 +191,9 @@ namespace MeshHERepLib
             v2 = tri._vertexID[0];
 
         // debug
-        if (v2 == -1)
-            return -1;
-        //assert(v2 != -1);
+        //if (v2 == -1)
+        //    return -1;
+        assert(v2 != -1);
 
         return halfedgeMap[std::make_pair(v1, v2)];
     }

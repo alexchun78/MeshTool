@@ -1,8 +1,6 @@
 #include "../pch.h"
 #include "../include/CSimplificationQuadricError.h"
 #include <cassert>
-#include <map>
-typedef std::map< size_t, size_t> orgVid2face_map;
 
 CSimplificationQuadricError::CSimplificationQuadricError(const std::string dllPath, const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris)
 {
@@ -18,15 +16,6 @@ CSimplificationQuadricError::CSimplificationQuadricError(const std::string dllPa
 
     // (3) halfedge manager 생성
     m_halfEdgeManager = new CHEManager(handle);
-
-    //// [추가] normal 값이 없으면, noraml을 생산한다.
-    //loopi(0, m_triangles.size())
-    //{
-    //    if (m_triangles[i]._normal != Vec3())
-    //        continue;
-    //    // normal vector를 구하지 않은 경우만 계산
-    //}
-
 }
 
 CSimplificationQuadricError::~CSimplificationQuadricError()
@@ -75,7 +64,6 @@ bool CSimplificationQuadricError::DoSimplification(const float reductionRate = 0
     // [2] 간략화
     Internal_Simplification(targetCount, agValue);
 
-
     // re-check : 간략화 실패한 경우
     if (m_outTriangles.size() >= m_triangles.size())
         return false;
@@ -121,22 +109,16 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
         if (triCount - deletedCount <= targetCount)
             break;
 
-        // [2-1] 메쉬 구조 업데이트 : triangle list 조정
+        // [3-1] 메쉬 구조 업데이트 : triangle list 조정
         if (iter % 5 == 0)
             UpdateMesh(iter);
-        //CompactMesh2(iter);
-
-        // [2-2] 더티 플래그 초기화
+        
+        // [3-2] 더티 플래그 초기화
         loopi(0, m_outTriangles.size())
             m_outTriangles[i]._dirty = 0;
 
         // Threshold아래의 삼각형 Edge들은 모두 삭제한다.
-        // 
         double threshold = 0.000000001 * pow(double(iter + 3), agressive);
-
-        //printf("iteration %d - triangles %d threshold %g\n", iteration, triangle_count - deleted_triangles, threshold);
-        if (iter == 1)
-            auto d = 0;
         loopi(0, m_outTriangles.size())
         {
             auto& testTri = m_outTriangles[18];
@@ -228,13 +210,14 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
                 UpdateTriangles(deletedCount, vid0, triIDs_vid1, vidList1, vecDeleted1);
 
 #else
+                // Flipped triangle인지 검사 
                 std::vector<size_t>& triIDs_vid0 = m_outVertices[vid0]._ptrTriIDs;
                 vecDeleted0.resize(triIDs_vid0.size());
-                if (IsFlipped2(vecDeleted0, triIDs_vid0, vertexErrorPos, vid0, vid1, v0))
+                if (IsFlipped(vecDeleted0, triIDs_vid0, vertexErrorPos, vid0, vid1, v0))
                     continue;
                 std::vector<size_t>& triIDs_vid1 = m_outVertices[vid1]._ptrTriIDs;
                 vecDeleted1.resize(triIDs_vid1.size());
-                if (IsFlipped2(vecDeleted1, triIDs_vid1, vertexErrorPos, vid1, vid0, v1))
+                if (IsFlipped(vecDeleted1, triIDs_vid1, vertexErrorPos, vid1, vid0, v1))
                     continue;
 
                 // Flipped triangle이 아니면 edge 제거
@@ -245,30 +228,12 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
                 std::vector<size_t>& vidList0 = m_outVertices[vid0]._ptrVids;
                 std::vector<size_t>& vidList1 = m_outVertices[vid1]._ptrVids;
 
-                UpdateTriangles2(deletedCount, vid0, triIDs_vid0, vidList0, vecDeleted0);
-                UpdateTriangles2(deletedCount, vid0, triIDs_vid1, vidList1, vecDeleted1);
+                UpdateTriangles(deletedCount, vid0, triIDs_vid0, vidList0, vecDeleted0);
+                UpdateTriangles(deletedCount, vid0, triIDs_vid1, vidList1, vecDeleted1);
 #endif
 
-                // [TODO] 각 버텍스마다 접해있는 face 정보와 vertex 위치를 업데이트 해주어야 한다. 
-                loopi(0, m_outVertices.size())
-                {
-                    m_outVertices[i]._ptrTriIDs.clear();
-                    m_outVertices[i]._ptrVids.clear();
-                }
-
-                loopi(0, m_outTriangles.size())
-                {
-                    MeshIOLib::Triangle& tri = m_outTriangles[i];
-                    loopj(0, 3)
-                    {
-                        MeshIOLib::Vertex& v = m_outVertices[tri._vertexID[j]];
-                        v._ptrTriIDs.push_back(i);
-                        v._ptrVids.push_back(j);
-                    }
-                }
-                
-                auto& debug_verts = m_outVertices;
-                auto& debug_tris = m_outTriangles;
+                // 모든 버텍스의 이웃 face 정보 갱신
+                UpdateNeighborTris();
                 break;
             }
             if (triCount - deletedCount <= targetCount)
@@ -298,8 +263,13 @@ void CSimplificationQuadricError::UpdateMesh(const int iter)
         }
         m_outTriangles.resize(dst);
     }
-    // [NOTE] 
-    // 여기서 필요한 이웃 정보는 버텍스에 인접한 face 리스트와 각 face에서의 vertex 위치이다.
+    // 모든 버텍스의 이웃 face 정보 갱신
+    UpdateNeighborTris();
+}
+
+void CSimplificationQuadricError::UpdateNeighborTris()
+{
+    // 모든 버텍스의 이웃 face 정보 갱신
     loopi(0, m_outVertices.size())
     {
         m_outVertices[i]._ptrTriIDs.clear();
@@ -315,10 +285,7 @@ void CSimplificationQuadricError::UpdateMesh(const int iter)
             v._ptrTriIDs.push_back(i);
             v._ptrVids.push_back(j);
         }
-    }         
-    // [TODO] 여기서 이웃 정보 업데이트가 필요하지 않을까?
-    //if(dst != backupCnt)
-    //    m_halfEdgeManager->Build2(m_outVertices.size(), m_outTriangles, true);
+    }
 }
 
 void CSimplificationQuadricError::ComposeSymetricMatrix(std::vector<MeshIOLib::Vertex>& verts, std::vector<MeshIOLib::Triangle>& tris)
@@ -403,69 +370,7 @@ double CSimplificationQuadricError::CalVertexError(MeshIOLib::SymetricMatrix q, 
         + 2 * q[6] * y + 2 * q[8] * z + q[9];
 }
 
-bool CSimplificationQuadricError::IsFlipped(std::vector<int>& vecDeleted, std::vector<MeshIOLib::index_t>& neighborTriangles, const Vec3& p, 
-    const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0)
-{
-    if (m_halfEdgeManager == NULL)
-    {
-        // 제대로 계산할 수 없다.
-        return true;
-    }
-
-    if (neighborTriangles.size() == 0)
-        return false;
-
-    // 삼각형들이 뒤집힌 상태인지 확인한다.
-    loopi(0, neighborTriangles.size())
-    {
-        MeshIOLib::Triangle& tri = m_outTriangles[neighborTriangles[i]];
-        if (tri._deleted)
-            continue;
-
-        size_t tmpVID = 0;
-        loopj(0,3)
-        {
-            if (tri._vertexID[j] == vid0)
-            {
-                tmpVID = j;
-                break;
-            }                
-        }
-        
-        // 다음 버텍스의 인덱스를 구한다.
-        auto vid1_tmp = tri._vertexID[(tmpVID + 1) % 3];
-        auto vid2_tmp = tri._vertexID[(tmpVID + 2) % 3];
-
-        // 해당하는 인덱스는 찾아서 해당 Edge를 합쳐야 한다.
-        if (vid1_tmp == vid1 || vid2_tmp == vid1)
-        {
-            vecDeleted[i] = 1;
-            continue;
-        }
-        // 20번째  vertex 값이 다르다
-        // 겹치지 않으면, vertex error vector에서 향하는 vector 구함
-        Vec3 d1 = m_outVertices[vid1_tmp]._position - p;
-        Vec3 d2 = m_outVertices[vid2_tmp]._position - p;
-        Normalize(d1);
-        Normalize(d2);
-
-        // 방향이 겹치면,
-        if (fabs(Dot(d1, d2)) > 0.999f) 
-            return true;
-
-        Vec3 normal = Cross(d1, d2);
-        Normalize(normal);
-        vecDeleted[i] = 0;
-
-        // 수직 관계의 벡터에 대한 예외처리
-        if (Dot(normal, tri._normal) < 0.2)
-            return true;
-    }
-    return false;
-}
-
-
-bool CSimplificationQuadricError::IsFlipped2(std::vector<int>& vecDeleted, std::vector<size_t>& neighborTriangles, const Vec3& p,
+bool CSimplificationQuadricError::IsFlipped(std::vector<int>& vecDeleted, std::vector<size_t>& neighborTriangles, const Vec3& p,
     const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0)
 {
     if (m_halfEdgeManager == NULL)
@@ -504,7 +409,7 @@ bool CSimplificationQuadricError::IsFlipped2(std::vector<int>& vecDeleted, std::
             vecDeleted[i] = 1;
             continue;
         }
-        // 20번째  vertex 값이 다르다
+
         // 겹치지 않으면, vertex error vector에서 향하는 vector 구함
         Vec3 d1 = m_outVertices[vid1_tmp]._position - p;
         Vec3 d2 = m_outVertices[vid2_tmp]._position - p;
@@ -527,36 +432,7 @@ bool CSimplificationQuadricError::IsFlipped2(std::vector<int>& vecDeleted, std::
 }
 
 // Update triangle connections and edge error after a edge is collapsed
-void CSimplificationQuadricError::UpdateTriangles(int& deletedTriCount, const int vid, const std::vector<MeshIOLib::index_t>& neighborTriangles, 
-    const std::vector<size_t> vidList, const std::vector<int>& vecDeleted)
-{
-    Vec3 p;
-    loopi(0, neighborTriangles.size())
-    {
-        MeshIOLib::Triangle& tri = m_outTriangles[neighborTriangles[i]];
-        
-        if (tri._deleted)
-            continue;
-        
-        if (vecDeleted[i])
-        {
-            tri._deleted = 1;
-            deletedTriCount++;
-            continue;
-        }
-
-        // 이웃 삼각형에서 자신의 index로 수정
-        tri._vertexID[vidList[i]] = vid;
-        tri._dirty = 1;
-        tri._error[0] = CalQuadricError(p, tri._vertexID[0], tri._vertexID[1]);
-        tri._error[1] = CalQuadricError(p, tri._vertexID[1], tri._vertexID[2]);
-        tri._error[2] = CalQuadricError(p, tri._vertexID[2], tri._vertexID[0]);
-        tri._error[3] = min(tri._error[0], min(tri._error[1], tri._error[2]));
-    }
-}
-
-// Update triangle connections and edge error after a edge is collapsed
-void CSimplificationQuadricError::UpdateTriangles2(int& deletedTriCount, const int vid, const std::vector<size_t>& neighborTriangles,
+void CSimplificationQuadricError::UpdateTriangles(int& deletedTriCount, const int vid, const std::vector<size_t>& neighborTriangles,
     const std::vector<size_t> vidList, const std::vector<int>& vecDeleted)
 {
     Vec3 p;
@@ -576,35 +452,24 @@ void CSimplificationQuadricError::UpdateTriangles2(int& deletedTriCount, const i
 
         // 이웃 삼각형에서 자신의 index로 수정
         tri._vertexID[vidList[i]] = vid;
-        tri._dirty = 1;
+        tri._dirty = 1; // 수정된 삼각형 표시
         tri._error[0] = CalQuadricError(p, tri._vertexID[0], tri._vertexID[1]);
         tri._error[1] = CalQuadricError(p, tri._vertexID[1], tri._vertexID[2]);
         tri._error[2] = CalQuadricError(p, tri._vertexID[2], tri._vertexID[0]);
         tri._error[3] = min(tri._error[0], min(tri._error[1], tri._error[2]));
-    }
-}
-
-void CSimplificationQuadricError::FindVidListFromFaceList(std::vector<size_t>& vidList, 
-    const std::vector<MeshIOLib::index_t>& neighborTriangles, const MeshIOLib::index_t vertexIndex)
-{
-    vidList.clear();
-    vidList.resize(neighborTriangles.size());
-    loopi(0, neighborTriangles.size())
-    {
-        auto tid = neighborTriangles[i];
-        loopj(0, 3)
-        {
-            if (m_outTriangles[tid]._vertexID[j] == vertexIndex)
-            {
-                vidList[i] = j;
-                break;
-            }
-        }        
     }
 }
 
 void CSimplificationQuadricError::CompactMesh()
 {
+    // 불필요한 데이터 삭제 및 초기화
+    loopi(0, m_outVertices.size())
+    {
+        m_outVertices[i]._ptrTriIDs.clear();
+        m_outVertices[i]._ptrVids.clear();
+    }
+
+    // 삼각형 재구성 
     size_t dst = 0;    
     loopi(0, m_outTriangles.size())
     {
@@ -615,27 +480,33 @@ void CSimplificationQuadricError::CompactMesh()
             loopj(0, 3)
             {
                 m_outVertices[tri._vertexID[j]]._bReMesh = true;
-                m_outVertices[tri._vertexID[j]]._triangleID = dst;
-                m_outVertices[tri._vertexID[j]]._vid = j;
+                m_outVertices[tri._vertexID[j]]._ptrTriIDs.push_back(dst);
+                m_outVertices[tri._vertexID[j]]._ptrVids.push_back(j);
             }
             dst++;
         }
     }
     m_outTriangles.resize(dst);
 
+    // 버텍스 재구성
     dst = 0;
     loopi(0, m_outVertices.size())
     {
         auto& vert = m_outVertices[i];
         if (vert._bReMesh)
         {
-            m_outVertices[dst++] = vert;
+            m_outVertices[dst] = vert;
+            loopj(0, m_outVertices[dst]._ptrTriIDs.size())
+            {
+                auto& fid = m_outVertices[dst]._ptrTriIDs[j];
+                auto& vid = m_outVertices[dst]._ptrVids[j];
+                m_outTriangles[fid]._vertexID[vid] = dst;
+            }
+            dst++;            
         }
     }
     m_outVertices.resize(dst);
 
-    // [TO DO] 여기서 바뀐 vertex index와 triangle 내 vertex index를 맞추어 주어야 한다.
-
-
+    // [검증] -> half edge 구조가 잘 생성되는 지 체크함.
     m_halfEdgeManager->Build(m_outVertices.size(), m_outTriangles);
 }

@@ -24,7 +24,6 @@ typedef void(*DLL_TERMINATE_MESHIO)(MeshIOLib::CMeshIO* object);
 // // HalfEdge
 typedef MeshHERepLib::CHalfEdgeRep* (*DLL_CREATE_HEREP)();
 typedef MeshIOLib::index_t(*DLL_BUILD_HEREP)(IN MeshHERepLib::CHalfEdgeRep* object, IN const unsigned long vertexListCount, IN const std::vector<MeshIOLib::Triangle>& vecTriangles);
-typedef MeshIOLib::index_t(*DLL_BUILD2_HEREP)(IN MeshHERepLib::CHalfEdgeRep* object, IN const unsigned long vertexListCount, IN const std::vector<MeshIOLib::Triangle>& vecTriangles, IN bool bSimplification);
 typedef const MeshHERepLib::HalfEdge& (*DLL_GETHALFEDGE_HEREP)(IN MeshHERepLib::CHalfEdgeRep* object, IN const MeshIOLib::index_t id);
 typedef bool (*DLL_GETEDGEFROMHALFEDGE_HEREP)(IN MeshHERepLib::CHalfEdgeRep* object, OUT std::pair<MeshIOLib::index_t, MeshIOLib::index_t>& edge, IN const MeshIOLib::index_t id);
 typedef MeshIOLib::index_t(*DLL_GETHALFEDGEINDEXFROMEDGE_HEREP)(IN MeshHERepLib::CHalfEdgeRep* object, IN const MeshIOLib::index_t& v1, IN const MeshIOLib::index_t& v2);

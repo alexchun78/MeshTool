@@ -20,18 +20,17 @@ private:
     bool LoadMeshData(const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris);
     bool Internal_Simplification(const int targetCount, const double agressive);
     void UpdateMesh(const int iter);
+    void UpdateNeighborTris();
     void ComposeSymetricMatrix(std::vector<MeshIOLib::Vertex>& verts, std::vector<MeshIOLib::Triangle>& tris);
+    void UpdateTriangles(int& deletedTriCount, const int vid, const std::vector<size_t>& neighborTriangles, const std::vector<size_t> vidList, const std::vector<int>& vecDeleted);    
+    double CalVertexError(MeshIOLib::SymetricMatrix q, Vec3 v);
+    void CompactMesh();
 
 private: // 이해가 안되는 기능들은 아래 참고 사이트의 구현 코드 사용함.
     // 참고: https://github.com/sp4cerat/Fast-Quadric-Mesh-Simplification 
-    double CalQuadricError(Vec3& p, const size_t v1, const size_t v2); // 크로네커 델타 (텐서) 구하는 공식
-    double CalVertexError(MeshIOLib::SymetricMatrix q, Vec3 v);
-    bool IsFlipped(std::vector<int>& vecDeleted, std::vector<MeshIOLib::index_t>& neighborTriangles, const Vec3& p, const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0);
-    bool IsFlipped2(std::vector<int>& vecDeleted, std::vector<size_t>& neighborTriangles, const Vec3& p, const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0);
-    void UpdateTriangles(int& deletedTriCount, const int vid, const std::vector<MeshIOLib::index_t>& neighborTriangles, const std::vector<size_t> vidList, const std::vector<int>& vecDeleted);
-    void UpdateTriangles2(int& deletedTriCount, const int vid, const std::vector<size_t>& neighborTriangles, const std::vector<size_t> vidList, const std::vector<int>& vecDeleted);
-    void FindVidListFromFaceList(std::vector<size_t>& vidList, const std::vector<MeshIOLib::index_t>& neighborTriangles, const MeshIOLib::index_t vertexIndex);
-    void CompactMesh();
+    double CalQuadricError(Vec3& p, const size_t v1, const size_t v2); // 크로네커 델타 (텐서) 구하는 공식    
+    bool IsFlipped(std::vector<int>& vecDeleted, std::vector<size_t>& neighborTriangles, const Vec3& p, const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0);
+    
 
 private:
     // input

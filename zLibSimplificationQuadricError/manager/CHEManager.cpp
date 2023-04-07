@@ -29,13 +29,6 @@ MeshIOLib::index_t CHEManager::Build(IN const unsigned long vertexListCount, IN 
     return pFunc(m_CHalfEdgeRep, vertexListCount, vecTriangles);
 }
 
-MeshIOLib::index_t CHEManager::Build2(IN const unsigned long vertexListCount, IN const std::vector<MeshIOLib::Triangle>& vecTriangles, IN bool bSimplification)
-{
-    DLL_BUILD2_HEREP pFunc = (DLL_BUILD2_HEREP)::GetProcAddress(m_handle, "Build2");
-    return pFunc(m_CHalfEdgeRep, vertexListCount, vecTriangles, bSimplification);
-}
-
-
 const MeshHERepLib::HalfEdge& CHEManager::GetHalfEdge(IN const MeshIOLib::index_t id)
 {
     DLL_GETHALFEDGE_HEREP pFunc = (DLL_GETHALFEDGE_HEREP)::GetProcAddress(m_handle, "GetHalfEdge");

@@ -17,7 +17,6 @@ namespace MeshHERepLib
         ~CHalfEdgeRep();
     
         bool Build(const unsigned long vertexListCount, const std::vector<MeshIOLib::Triangle>& vecTriangles);
-        bool Build2(const unsigned long vertexListCount, const std::vector<MeshIOLib::Triangle>& vecTriangles, bool bSimpification);
 
     public:
         const HalfEdge& GetHalfEdge(const MeshIOLib::index_t id) const;
