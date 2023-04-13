@@ -26,6 +26,16 @@ private:
     double CalVertexError(MeshIOLib::SymetricMatrix q, Vec3 v);
     void CompactMesh();
 
+private:
+    bool Internal_Simplification_FQM(const int targetCount, const double agressive);
+    void UpdateMesh_FQM(const int iter);
+    void Internal_SetInitData_FQM(std::vector<MeshIOLib::Vertex>& vertices, std::vector<MeshIOLib::Triangle>& tris, std::vector<MeshIOLib::Ref>& refs);
+    void Internal_UpdateRefData_FQM(std::vector<MeshIOLib::Vertex>& vertices, std::vector<MeshIOLib::Triangle>& tris, std::vector<MeshIOLib::Ref>& refs);
+    double CalQuadricError_FQM(Vec3& p, const size_t v1, const size_t v2); // 크로네커 델타 (텐서) 구하는 공식    
+    bool IsFlipped_FQM(std::vector<int>& vecDeleted, const Vec3& p, const MeshIOLib::index_t vid0, const MeshIOLib::index_t vid1, const MeshIOLib::Vertex& v0);
+    void UpdateTriangles_FQM(int& deletedTriCount, const int vid, const MeshIOLib::Vertex& v, const std::vector<int>& vecDeleted);
+    void CompactMesh_FQM();
+
 private: // 이해가 안되는 기능들은 아래 참고 사이트의 구현 코드 사용함.
     // 참고: https://github.com/sp4cerat/Fast-Quadric-Mesh-Simplification 
     double CalQuadricError(Vec3& p, const size_t v1, const size_t v2); // 크로네커 델타 (텐서) 구하는 공식    
@@ -40,6 +50,7 @@ private:
     // output
     std::vector<MeshIOLib::Vertex> m_outVertices;
     std::vector<MeshIOLib::Triangle> m_outTriangles;
+    std::vector<MeshIOLib::Ref> m_refs;
 
 private:
     CDLLManager* m_dllManager;

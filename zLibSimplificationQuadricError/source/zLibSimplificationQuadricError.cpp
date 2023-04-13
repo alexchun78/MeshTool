@@ -25,7 +25,8 @@ int main()
     // file import
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
     {
-        bool bRtn = ioManager->LoadSTL("..\\subdividedBox.stl");
+        //bool bRtn = ioManager->LoadSTL("..\\2_bunnyO_new.stl");
+        bool bRtn = ioManager->LoadSTL("..\\cast3br.stl");
         if (bRtn == false)
             return -1;
     }
@@ -52,9 +53,9 @@ int main()
 
     // ÆÄÀÏ ¿ÀÇÂ
     FILE* file;
-    if ((::fopen_s(&file, "C:\\_dev\\MeshTool\\subdividedBox_testOutput.obj", "w")) != 0)
+    if ((::fopen_s(&file, "C:\\_dev\\MeshTool\\cast3br_simple.obj", "w")) != 0)
     {
-        std::cout << "write_obj: can't write data file " << "C:\\_dev\\MeshTool\\subdividedBox_testOutput.obj" << "." << std::endl;
+        std::cout << "write_obj: can't write data file " << "C:\\_dev\\MeshTool\\cast3br_simple.obj" << "." << std::endl;
     }
     if (file == NULL)
         return -1;
@@ -68,10 +69,9 @@ int main()
     {
         fprintf(file, "f %d %d %d\n", _outputTris[i]._vertexID[0] + 1, _outputTris[i]._vertexID[1] + 1, _outputTris[i]._vertexID[2] + 1);
     }
-
+    std::cout << "close" << std::endl;
     // terminate
     dll->TerminateDLL();
-    //dllHE->TerminateDLL();
 
     return 0;
 }

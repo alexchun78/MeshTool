@@ -82,6 +82,12 @@ namespace MeshIOLib
 
     typedef long index_t;
 
+    // for simplification duration comparison
+    typedef struct ref_tag {
+        size_t _tid;
+        size_t _tvertex;
+    } Ref;
+
     typedef struct triangle_tag {
 
         index_t _vertexID[3];
@@ -126,6 +132,12 @@ namespace MeshIOLib
         size_t _triangleID;
         size_t _vid; // _triangleID의 face 내에서 vertex 위치 (0,1,2)
         bool _bReMesh = false;
+        
+        // for simplification duration comparison
+        size_t _border = 0;
+        size_t _tstart = 0;
+        size_t _tcount = 0;
+
         std::vector<size_t> _ptrTriIDs; // 인접한 triangle id 리스트 
         std::vector<size_t> _ptrVids; // _triangleID의 face 내에서 vertex 위치 (0,1,2) 집합들
         SymetricMatrix _q;

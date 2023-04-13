@@ -1,6 +1,7 @@
 #include "../pch.h"
 #include "../include/CSimplificationQuadricError.h"
 #include <cassert>
+#include <time.h>
 
 CSimplificationQuadricError::CSimplificationQuadricError(const std::string dllPath, const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris)
 {
@@ -62,7 +63,8 @@ bool CSimplificationQuadricError::DoSimplification(const float reductionRate = 0
     assert(targetCount >= 4);
 
     // [2] 간략화
-    Internal_Simplification(targetCount, agValue);
+    //Internal_Simplification(targetCount, agValue);
+    Internal_Simplification_FQM(targetCount, agValue);
 
     // re-check : 간략화 실패한 경우
     if (m_outTriangles.size() >= m_triangles.size())
@@ -104,6 +106,10 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
     int deletedCount = 0;
     int triCount = m_outTriangles.size();
 
+    // 시간 측정
+    clock_t start, end;
+    double result;
+    
     for (int iter = 0; iter < 100; ++iter)
     {
         if (triCount - deletedCount <= targetCount)
@@ -111,7 +117,16 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
 
         // [3-1] 메쉬 구조 업데이트 : triangle list 조정
         if (iter % 5 == 0)
+        {
             UpdateMesh(iter);
+
+            //std::vector<std::vector<size_t>> neighborTrisGroup;
+            //std::vector<size_t> neighborTris;
+            //for (int mm = 0; mm < m_vertices.size(); ++mm)
+            //{
+            //    // 이웃 삼각형을 검증하기 위한 조치 
+            //}
+        }
         
         // [3-2] 더티 플래그 초기화
         loopi(0, m_outTriangles.size())
@@ -121,7 +136,6 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
         double threshold = 0.000000001 * pow(double(iter + 3), agressive);
         loopi(0, m_outTriangles.size())
         {
-            auto& testTri = m_outTriangles[18];
             MeshIOLib::Triangle& tri = m_outTriangles[i];
             if (tri._error[3] >= threshold)
                 continue;
@@ -130,6 +144,8 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
             if (tri._dirty)
                 continue;
 
+            // 시간 측정
+            start = clock();
             loopj(0,3)
             {
                 if (tri._error[j] >= threshold)
@@ -231,11 +247,16 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
                 UpdateTriangles(deletedCount, vid0, triIDs_vid0, vidList0, vecDeleted0);
                 UpdateTriangles(deletedCount, vid0, triIDs_vid1, vidList1, vecDeleted1);
 #endif
-
                 // 모든 버텍스의 이웃 face 정보 갱신
                 UpdateNeighborTris();
                 break;
             }
+
+            // 시간 측정
+            end = clock();
+            result = (double)(end - start);
+            auto resultSec = (result) / CLOCKS_PER_SEC;
+            
             if (triCount - deletedCount <= targetCount)
             {
                 auto nDebugCount = iter;
@@ -508,5 +529,5 @@ void CSimplificationQuadricError::CompactMesh()
     m_outVertices.resize(dst);
 
     // [검증] -> half edge 구조가 잘 생성되는 지 체크함.
-    m_halfEdgeManager->Build(m_outVertices.size(), m_outTriangles);
+    //m_halfEdgeManager->Build(m_outVertices.size(), m_outTriangles);
 }
