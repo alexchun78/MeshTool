@@ -5,8 +5,8 @@
 bool CSimplificationQuadricError::Internal_Simplification_FQM(const int targetCount, const double agressive)
 {
 	// [1] 초기화
-	loopi(0, m_outTriangles.size())
-		m_outTriangles[i]._deleted = 0;
+	//loopi(0, m_outTriangles.size())
+	//	m_outTriangles[i]._deleted = 0;
 
 	// [2] 초기 Mesh Data 구성
 	// // [2-1] boundary 및 이웃 삼각형 정보 구성
@@ -39,7 +39,7 @@ bool CSimplificationQuadricError::Internal_Simplification_FQM(const int targetCo
 		// [3-1] 메쉬 구조 업데이트 : triangle list 조정
 		if (iter % 5 == 0)
 		{
-			UpdateMesh(iter);
+			UpdateMesh_FQM(iter);
 		}
 		// [2] 더티 플래그 초기화 
 		// clear dirty flag
@@ -107,10 +107,14 @@ bool CSimplificationQuadricError::Internal_Simplification_FQM(const int targetCo
 				v0._tcount = tcount;
 				break;
 			}
+			// done?
+			if (triCount - deletedCount <= targetCount)
+			{
+				auto nDebugCount = iter;
+				std::cout << iter << std::endl;
+				break;
+			}
 		}
-		if (deletedCount <= 0)
-			break;
-		deletedCount = 0;
 	}
 	CompactMesh_FQM();
 	return true;
@@ -280,8 +284,8 @@ void CSimplificationQuadricError::Internal_SetInitData_FQM(std::vector<MeshIOLib
 {
     std::vector<int> vcount, vids;
 
-    loopi(0, vertices.size())
-        vertices[i]._border = 0;
+    //loopi(0, vertices.size())
+    //    vertices[i]._border = 0;
 
 	// boundary vertex 구하기
 	loopi(0, vertices.size())
@@ -312,19 +316,22 @@ void CSimplificationQuadricError::Internal_SetInitData_FQM(std::vector<MeshIOLib
 					vcount[ofs]++;
 			}
 		}
-		loopj(0, vcount.size()) if (vcount[j] == 1)
-			vertices[vids[j]]._border = 1;
+		loopj(0, vcount.size())
+		{
+			if (vcount[j] == 1)
+				vertices[vids[j]]._border = 1;
+		}
 	}
 }
 
 void CSimplificationQuadricError::Internal_UpdateRefData_FQM(std::vector<MeshIOLib::Vertex>& vertices, std::vector<MeshIOLib::Triangle>& tris, std::vector<MeshIOLib::Ref>& refs)
 {
 	// Init Reference ID list
-	loopi(0, vertices.size())
-	{
-		vertices[i]._tstart = 0;
-		vertices[i]._tcount = 0;
-	}
+	//loopi(0, vertices.size())
+	//{
+	//	vertices[i]._tstart = 0;
+	//	vertices[i]._tcount = 0;
+	//}
 
 	loopi(0, tris.size())
 	{

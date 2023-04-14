@@ -113,9 +113,40 @@ namespace MeshIOLib
         m_vecTriangles.clear();
 
         // 2. vertex data 추출
-        std::vector<Vertex> verts_temp = LoadSTL_Vertices(filename);
+        std::vector<VertexSTL> verts_temp = LoadSTL_Vertices(filename);
+#if 1
+        const size_t numVertices = verts_temp.size();
+        // face 정보를 구성하기 위한 vertex idx
+        int32_t* indices = (int32_t*) ::malloc(numVertices * sizeof(int32_t));
+        //loopi(0, numVertices)
+        //    verts_temp[i]._id = i;
+        std::sort(verts_temp.begin(), verts_temp.end());
+
+        // vertex 구성
+        unsigned int newIdx = 0;
+        loopi(0, numVertices)
+        {
+            VertexSTL v = verts_temp[i];
+            if (!newIdx || v != verts_temp[newIdx-1])
+            {
+                verts_temp[newIdx++] = v;
+            }
+            indices[v._id] = newIdx - 1; // face 정보 구성을 위한 vertex idx
+        }
+        verts_temp.resize(newIdx);
         m_vecVertices.reserve(verts_temp.size());
-        m_vecTriangles.resize(verts_temp.size()/3);
+        loopi(0, verts_temp.size())
+            m_vecVertices.push_back(Vertex(verts_temp[i]._x, verts_temp[i]._y, verts_temp[i]._z));
+
+        // trinagle 구성
+        m_vecTriangles.reserve(numVertices / 3);
+        for (int i = 0; i < numVertices; i += 3)
+            m_vecTriangles.push_back(Triangle(indices[i], indices[i+1], indices[i+2]));
+            
+        ::free(indices);
+#else
+        m_vecVertices.reserve(verts_temp.size());
+        m_vecTriangles.resize(verts_temp.size() / 3);
 
         // 3. vertex와 face에 정보 입력
         triangle_tag tri;
@@ -187,6 +218,7 @@ namespace MeshIOLib
             prevVertex = verts_temp[i];
             temps.push_back(prevVertex);
         }
+#endif
     }
 
     void CMeshIO::WriteOBJ(const char* filename)
@@ -229,14 +261,14 @@ namespace MeshIOLib
     }
 
 
-    std::vector<Vertex> CMeshIO::LoadSTL_Vertices(const char* filename)
+    std::vector<VertexSTL> CMeshIO::LoadSTL_Vertices(const char* filename)
     {
         // 1. file open
         std::ifstream file;
         file.open(filename, std::ios::in);
         if (!file)
         {
-            return std::vector<Vertex>();
+            return std::vector<VertexSTL>();
         }
 
         std::string line;
@@ -262,19 +294,20 @@ namespace MeshIOLib
         return Load_Binary(filename);
     }
 
-    std::vector<Vertex> CMeshIO::Load_ASCII(const char* filename)
+    std::vector<VertexSTL> CMeshIO::Load_ASCII(const char* filename)
     {
-        std::vector<Vertex> verts_temp;
+        std::vector<VertexSTL> verts_temp;
 
         // 1. file open
         std::ifstream file;
         file.open(filename, std::ios::in);
         if (!file)
         {
-            return std::vector<Vertex>();
+            return std::vector<VertexSTL>();
         }
 
         // 2. 끝날때까지 반복
+        size_t index = 0;
         std::string line;
         while (!file.eof()) 
         {
@@ -286,7 +319,9 @@ namespace MeshIOLib
             if (line.rfind("vertex", 0) == 0)
             {
                 // 2.3.1. 찾으면, vector값을 저장한다.
-                verts_temp.push_back(get_vector(line));
+                VertexSTL v = get_vector(line);
+                v._id = index++;
+                verts_temp.push_back(v);
             }
         }
         file.close();
@@ -294,14 +329,14 @@ namespace MeshIOLib
         return verts_temp;
     }
 
-    std::vector<Vertex> CMeshIO::Load_Binary(const char* filename)
+    std::vector<VertexSTL> CMeshIO::Load_Binary(const char* filename)
     {
         // 1. file open
         std::ifstream file;
         file.open(filename,  std::ios::in | std::ios::binary);
         if (!file)
         {
-            return std::vector<Vertex>();
+            return std::vector<VertexSTL>();
         }
         /* 형식
             UINT8[80] – 헤더 - 80바이트
@@ -326,20 +361,21 @@ namespace MeshIOLib
         // 3.2. 삼각형 전체 바이트 수 (남은 전체 문서 길이)
         size_t length = num_faces * 50;
         if(length < 0) // 예외처리 : 사이즈가 너무 커서 unsigned int 범위를 벗어나는 경우 
-            return std::vector<Vertex>();
+            return std::vector<VertexSTL>();
 
         // 4. 파일 전체 읽어오기
         char* ret = new char[length];
         file.read(ret, length);
 
         // 5. 전체 버텍스 저장시키기
-        std::vector<Vertex> verts_temp(num_vertices);
+        std::vector<VertexSTL> verts_temp(num_vertices);
         loopi(0, num_faces)
         {
             loopj(0, 3)
             {
                 const int id = i * 3 + j;
-                std::memcpy(&verts_temp[id]._position, &ret[(50 * i) + (j * 12) + 12], 12);
+                std::memcpy(&verts_temp[id], &ret[(50 * i) + (j * 12) + 12], 12);
+                verts_temp[id]._id = id;
             }
         }
         file.close();

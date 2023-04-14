@@ -48,6 +48,9 @@
     <ClCompile Include="..\zLibMeshIO\source\Vector.cpp">
       <Filter>Header Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="source\CSimplificationQuadricError_others.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

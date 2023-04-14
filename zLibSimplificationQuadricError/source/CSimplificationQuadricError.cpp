@@ -1,7 +1,6 @@
 #include "../pch.h"
 #include "../include/CSimplificationQuadricError.h"
 #include <cassert>
-#include <time.h>
 
 CSimplificationQuadricError::CSimplificationQuadricError(const std::string dllPath, const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris)
 {
@@ -61,11 +60,12 @@ bool CSimplificationQuadricError::DoSimplification(const float reductionRate = 0
     // [1] Target Count 정하기
     int targetCount = ::round((float)m_outTriangles.size() * rate);
     assert(targetCount >= 4);
+    //printf("Mesh Simplification (C)2014 by Sven Forstmann in 2014, MIT License (%zu-bit)\n", sizeof(size_t) * 8);
 
     // [2] 간략화
     //Internal_Simplification(targetCount, agValue);
-    Internal_Simplification_FQM(targetCount, agValue);
-
+    if(!Internal_Simplification_FQM(targetCount, agValue))
+        return false;
     // re-check : 간략화 실패한 경우
     if (m_outTriangles.size() >= m_triangles.size())
         return false;
@@ -106,9 +106,9 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
     int deletedCount = 0;
     int triCount = m_outTriangles.size();
 
-    // 시간 측정
-    clock_t start, end;
-    double result;
+    //// 시간 측정
+    //clock_t start, end;
+    //double result;
     
     for (int iter = 0; iter < 100; ++iter)
     {
@@ -144,8 +144,8 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
             if (tri._dirty)
                 continue;
 
-            // 시간 측정
-            start = clock();
+            //// 시간 측정
+            //start = clock();
             loopj(0,3)
             {
                 if (tri._error[j] >= threshold)
@@ -252,11 +252,11 @@ bool CSimplificationQuadricError::Internal_Simplification(const int targetCount,
                 break;
             }
 
-            // 시간 측정
-            end = clock();
-            result = (double)(end - start);
-            auto resultSec = (result) / CLOCKS_PER_SEC;
-            
+            //// 시간 측정
+            //end = clock();
+            //result = (double)(end - start);
+            //auto resultSec = (result) / CLOCKS_PER_SEC;
+            //
             if (triCount - deletedCount <= targetCount)
             {
                 auto nDebugCount = iter;

@@ -84,8 +84,8 @@ namespace MeshIOLib
 
     // for simplification duration comparison
     typedef struct ref_tag {
-        size_t _tid;
-        size_t _tvertex;
+        int _tid;
+        int _tvertex;
     } Ref;
 
     typedef struct triangle_tag {
@@ -97,8 +97,8 @@ namespace MeshIOLib
         // // is deleted?
         // // is dirty?
         double _error[4]; 
-        int _deleted;
-        int _dirty;
+        int _deleted = 0;
+        int _dirty = 0;
 
         index_t& i() { return _vertexID[0]; }
         const index_t& i() const { return _vertexID[0]; }
@@ -116,8 +116,50 @@ namespace MeshIOLib
                 i = 0.0;
             _deleted = _dirty = 0;
         }
+        triangle_tag(index_t i0, index_t i1, index_t i2)
+        {
+            _vertexID[0] = i0;
+            _vertexID[1] = i1;
+            _vertexID[2] = i2;
+            for (double& i : _error)
+                i = 0.0;
+            _deleted = _dirty = 0;
+        }
 
     } Triangle;
+
+    typedef struct vertexSTL_tag
+    {
+        vertexSTL_tag() {}
+        vertexSTL_tag(float x, float y, float z) : _x(x), _y(y), _z(z) {}
+
+        union
+        {
+            struct
+            {
+                float _x;
+                float _y;
+                float _z;
+            };
+            float asArray[3];
+        };
+
+        size_t _id;
+        
+        bool operator!=(const vertexSTL_tag& rhs) const
+        {
+            return _x != rhs._x || _y != rhs._y || _z != rhs._z;
+        }
+
+        bool operator<(const vertexSTL_tag& rhs) const
+        {
+            if (_x != rhs._x)    return _x < rhs._x;
+            else if (_y != rhs._y)    return _y < rhs._y;
+            else if (_z != rhs._z)    return _z < rhs._z;
+            else                    return false;
+        }
+    } VertexSTL;
+
 
     typedef struct vertex_tag {
 

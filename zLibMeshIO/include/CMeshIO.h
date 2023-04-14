@@ -38,9 +38,9 @@ namespace MeshIOLib
         }
     private:
         // thanks to https://github.com/mkeeter/fstl/blob/master/src/loader.cpp
-        std::vector<Vertex> LoadSTL_Vertices(const char* filename);
-        std::vector<Vertex> Load_ASCII(const char* filename);
-        std::vector<Vertex> Load_Binary(const char* filename);
+        std::vector<VertexSTL> LoadSTL_Vertices(const char* filename);
+        std::vector<VertexSTL> Load_ASCII(const char* filename);
+        std::vector<VertexSTL> Load_Binary(const char* filename);
    
     private:
         inline void write_float(float f, FILE* file) {
@@ -57,7 +57,7 @@ namespace MeshIOLib
             str.erase(str.find_last_not_of(' ') + 1);         //surfixing spaces
             return str;
         }
-        inline Vertex get_vector(std::string& str)
+        inline VertexSTL get_vector(std::string& str)
         {
             float x, y, z;
             if (::sscanf_s(str.c_str(), "vertex %f %f %f", &x, &y, &z) != 3)
@@ -65,7 +65,7 @@ namespace MeshIOLib
                 printf("ascii stl format is not valid.\n");
                 exit(1);
             }
-            return Vertex(x, y, z);
+            return VertexSTL(x, y, z);
         }
 
     private:

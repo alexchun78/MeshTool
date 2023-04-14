@@ -1,16 +1,22 @@
-// zLibSimplificationQuadricError.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include "../pch.h"
 #include "../manager/CDLLManager.h"
 #include "../manager/CHEManager.h"
 #include "../CMeshIOManager.h"
 #include "../include/CSimplificationQuadricError.h"
 #include <iostream>
-
+#define TIMECHK 
 #define INTRTRN_CHKNULL(val) if(val == NULL){return -1;}
 int main()
 {
+#ifdef TIMECHK
+    // 시간 측정
+    clock_t start, end;
+    double result;
+#endif
+#ifdef TIMECHK
+    // 시간 측정
+    start = clock();
+#endif
     // dll 파일을 로드한다.
     std::string path = "../Common/dll/zLibMeshIO.dll";
     CDLLManager* dll = new CDLLManager(path.c_str());
@@ -18,9 +24,6 @@ int main()
     INTRTRN_CHKNULL(handle);
 
     path = "../Common/dll/zLibHalfEdgeRep.dll";
-    //CDLLManager* dllHE = new CDLLManager(path.c_str());
-    //auto handleHE = dllHE->GetDLLHandle();
-    //INTRTRN_CHKNULL(handleHE);
 
     // file import
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
@@ -33,13 +36,13 @@ int main()
     auto verts = ioManager->GetVertexList();
     auto tris = ioManager->GetTriangleList();
     
-    // do half edge process
-    //CHEManager* heManager = new CHEManager(handleHE);
-    //auto nRtn = heManager->Build(verts.size(), tris);
-    //if (nRtn != 1)
-    //    return -1;
-    //std::vector<MeshIOLib::index_t> neighbors;
-    //heManager->FindVertexNeighborsFromVertex(neighbors, 3);
+#ifdef TIMECHK
+    // 시간 측정
+    end = clock();
+    result = (double)(end - start);
+    auto resultSec = (result) / CLOCKS_PER_SEC;
+    std::cout << "Elesped Time : " << resultSec << std::endl;
+#endif
 
     // do simplification process
     CSimplificationQuadricError* pSimply = new CSimplificationQuadricError(path, verts, tris);
@@ -48,8 +51,6 @@ int main()
     std::vector<MeshIOLib::Vertex> _outputVerts;
     std::vector<MeshIOLib::Triangle> _outputTris;
     pSimply->GetSimplificationOuputData(_outputVerts, _outputTris);
-
-   // ioManager->WriteOBJWithMeshData("C:\\_dev\\MeshTool\\splitedBox_testOutput.obj", _outputVerts, _outputTris);
 
     // 파일 오픈
     FILE* file;
@@ -69,7 +70,6 @@ int main()
     {
         fprintf(file, "f %d %d %d\n", _outputTris[i]._vertexID[0] + 1, _outputTris[i]._vertexID[1] + 1, _outputTris[i]._vertexID[2] + 1);
     }
-    std::cout << "close" << std::endl;
     // terminate
     dll->TerminateDLL();
 
