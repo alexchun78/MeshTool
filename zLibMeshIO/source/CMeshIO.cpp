@@ -99,7 +99,8 @@ namespace MeshIOLib
     }
 
     void CMeshIO::LoadSTL(const char* filename)
-    {
+    {    
+
         // mesh from verts
         // 0. 예외 처리
         if (filename == NULL)

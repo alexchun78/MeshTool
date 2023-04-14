@@ -1,7 +1,8 @@
 #pragma once
+
 #include "../manager/CDLLManager.h"
 #include "../manager/CHEManager.h"
-class CSimplificationQuadricError
+class CSimplificationQuadricError 
 {
 public:
     CSimplificationQuadricError(const std::string dllPath, const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris);
