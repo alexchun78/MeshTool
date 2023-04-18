@@ -15,7 +15,8 @@ int main()
     if (handle == NULL)
         return -1;
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
-    bool bRtn = ioManager->LoadSTL("..\\cast3br.stl");
+    bool bRtn = ioManager->LoadOBJ("..\\smartslicerA.OBJ");
+    //bool bRtn = ioManager->LoadSTL("..\\cast3br.stl");
     if (bRtn == false)
         return -1;
 
@@ -43,7 +44,6 @@ int main()
     if (handle3 == NULL)
         return -1;
 
-    //CMeshSimplificationManager* simplificationQEManager = new CMeshSimplificationManager(handle3);
     CMeshSimplificationManager* simplificationQEManager = new CMeshSimplificationManager(handle3, verts, tris);
     bRtn = simplificationQEManager->DoSimplificationQE(0.2, 7);
     if (bRtn == false)
@@ -51,6 +51,9 @@ int main()
     std::vector<MeshIOLib::Vertex> simVerts;
     std::vector<MeshIOLib::Triangle> simTris;
     simplificationQEManager->GetSimplificationOutputData(simVerts, simTris);
+
+    // [4] 결과 파일 출력
+    ioManager->WriteSTLwithData("..\\smartslicerA_sim.stl", simVerts, simTris);
 
 
     dllIO->TerminateDLL();

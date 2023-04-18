@@ -109,7 +109,7 @@ namespace MeshSimplificationQELib
 				if (triCount - deletedCount <= targetCount)
 				{
 					auto nDebugCount = iter;
-					std::cout << iter << std::endl;
+					std::cout << "iterator times :  " << iter << std::endl;
 					break;
 				}
 			}

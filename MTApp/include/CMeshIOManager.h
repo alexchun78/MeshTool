@@ -5,13 +5,14 @@ class CMeshIOManager
 {
 public:
     CMeshIOManager(const HMODULE handle);
-    //CMeshIOManager(const char* path);
     ~CMeshIOManager();
 
-    bool LoadOBJ(const char* filename);
-    bool LoadSTL(const char* filename);
-    //bool LoadSTL(const char* filename);
-
+    bool LoadOBJ(const char* filepath);
+    bool LoadSTL(const char* filepath);
+    bool WriteOBJ(const char* filepath);
+    bool WriteSTL(const char* filepath);
+    bool WriteOBJwithData(const char* filepath, const std::vector<MeshIOLib::Vertex>& vecVerts, const std::vector<MeshIOLib::Triangle>& vecTris);
+    bool WriteSTLwithData(const char* filepath, const std::vector<MeshIOLib::Vertex>& vecVerts, const std::vector<MeshIOLib::Triangle>& vecTris);
    // void TerminateDLL();
 
 public:

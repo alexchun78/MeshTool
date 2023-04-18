@@ -2,7 +2,7 @@
 class CMeshSimplificationManager
 {
     public:
-        CMeshSimplificationManager(const HMODULE handle, const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris);
+        CMeshSimplificationManager(const HMODULE handle, const std::vector<MeshIOLib::Vertex> verts, const std::vector<MeshIOLib::Triangle> tris);
         //CMeshSimplificationManager(const HMODULE handle);
         ~CMeshSimplificationManager();
 

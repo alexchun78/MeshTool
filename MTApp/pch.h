@@ -11,6 +11,11 @@
 // // MeshIO
 typedef MeshIOLib::CMeshIO* (*DLL_CREATE_MESHIO)();
 typedef void (*DLL_LOADSTL_MESHIO)(MeshIOLib::CMeshIO* object, const char* filename);
+typedef void (*DLL_LOADOBJ_MESHIO)(MeshIOLib::CMeshIO* object, const char* filename);
+typedef void (*DLL_WRITESTL_MESHIO)(MeshIOLib::CMeshIO* object, const char* filename);
+typedef void (*DLL_WRITEOBJ_MESHIO)(MeshIOLib::CMeshIO* object, const char* filename);
+typedef void (*DLL_WRITESTLWITHDATA_MESHIO)(MeshIOLib::CMeshIO* object, const char* filename, const std::vector<MeshIOLib::Vertex>& vecVerts, const std::vector<MeshIOLib::Triangle>& vecTris);
+typedef void (*DLL_WRITEOBJWITHDATA_MESHIO)(MeshIOLib::CMeshIO* object, const char* filename, const std::vector<MeshIOLib::Vertex>& vecVerts, const std::vector<MeshIOLib::Triangle>& vecTris);
 typedef std::vector<MeshIOLib::Vertex>(*DLL_GETVERTEX_MESHIO)(MeshIOLib::CMeshIO* object);
 typedef std::vector<MeshIOLib::Triangle>(*DLL_GETTRIANGLE_MESHIO)(MeshIOLib::CMeshIO* object);
 typedef void(*DLL_TERMINATE_MESHIO)(MeshIOLib::CMeshIO* object);
@@ -31,7 +36,6 @@ typedef void (*DLL_TERMINATE_HEREP)(IN MeshHERepLib::CHalfEdgeRep* object);
 
 
 // // Mesh Simplification
-//typedef MeshSimplificationQELib::CSimplificationQuadricError* (*DLL_CREATE_SIMPLIFICATION_QE)();
 typedef MeshSimplificationQELib::CSimplificationQuadricError* (*DLL_CREATE_SIMPLIFICATION_QE)(IN const std::vector<MeshIOLib::Vertex>& verts, IN const std::vector<MeshIOLib::Triangle>& tris);
 typedef bool (*DLL_RUN_SIMPLIFICATION_QE)(IN MeshSimplificationQELib::CSimplificationQuadricError* object, IN const float reductionRate, IN const float agressive);
 typedef void (*DLL_GETOUTPUT_SIMPLIFICATION_QE)(IN MeshSimplificationQELib::CSimplificationQuadricError* object, OUT std::vector<MeshIOLib::Vertex>& verts, OUT std::vector<MeshIOLib::Triangle>& tris);

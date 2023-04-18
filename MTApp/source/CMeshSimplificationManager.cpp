@@ -1,18 +1,7 @@
 #include "../pch.h"
 #include "../include/CMeshSimplificationManager.h"
 
-//CMeshSimplificationManager::CMeshSimplificationManager(const HMODULE handle)
-//{
-//    if (handle != NULL)
-//    {
-//        // 외부로 참조된 instance 함수를 취득
-//        DLL_CREATE_SIMPLIFICATION_QE pFunc = (DLL_CREATE_SIMPLIFICATION_QE)::GetProcAddress(handle, "CreateSimplificationQE");
-//        m_CSimplificationQE = pFunc();
-//        m_handle = handle;
-//    }
-//}
-
-CMeshSimplificationManager::CMeshSimplificationManager(const HMODULE handle, const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris)
+CMeshSimplificationManager::CMeshSimplificationManager(const HMODULE handle, const std::vector<MeshIOLib::Vertex> verts, const std::vector<MeshIOLib::Triangle> tris)
 {
     if (handle != NULL)
     {

@@ -294,19 +294,51 @@ namespace MeshIOLib
             fprintf(file, "f %d %d %d\n", vecTris[i]._vertexID[0] + 1, vecTris[i]._vertexID[1] + 1, vecTris[i]._vertexID[2] + 1);
         }
         
-        
+        fclose(file);
     }
 
     void CMeshIO::WriteSTL(const char* filename)
     {
-
+        WriteSTL(filename, m_vecVertices, m_vecTriangles);
     }
 
     void CMeshIO::WriteSTL(const char* filename, const std::vector<Vertex>& vecVerts, const std::vector<Triangle>& vecTris)
     {
+        FILE* file;
+        if ((::fopen_s(&file, filename, "wb")) != 0)
+        {
+            std::cout << "write_stl: can't write data file " << filename << "." << std::endl;
+        }
+        if (file == NULL)
+            return;
 
+        unsigned char buffer[80] = { 'T', 'I', 'G', 'E', 'R' }; // write 80 empty
+        fwrite(buffer, sizeof(buffer), 1, file);
+        unsigned char spacer[2] = { '\0', '\0' }; // null char
+
+        unsigned int number_triangles = 0;
+        loopi(0, vecTris.size())
+            number_triangles += 1;
+        fwrite(&number_triangles, sizeof(number_triangles), 1, file);
+
+        loopi(0, vecTris.size())
+        {
+            Vec3 v0 = vecVerts[vecTris[i]._vertexID[0]]._position;
+            Vec3 v1 = vecVerts[vecTris[i]._vertexID[1]]._position;
+            Vec3 v2 = vecVerts[vecTris[i]._vertexID[2]]._position;
+
+            Vec3 normal = Cross(v1 - v0, v2 - v0);
+            Normalize(normal);
+
+            write_vertex_stl(normal, file);
+            write_vertex_stl(v0, file);
+            write_vertex_stl(v1, file);
+            write_vertex_stl(v2, file);
+
+            fwrite(spacer, sizeof(spacer), 1, file);
+        }
+        fclose(file);
     }
-
 
     std::vector<VertexSTL> CMeshIO::LoadSTL_Vertices(const char* filename)
     {

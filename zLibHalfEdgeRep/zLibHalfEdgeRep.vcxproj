@@ -33,7 +33,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -123,7 +123,11 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "$(SolutionDir)Common\dll" mkdir "$(SolutionDir)Common\dll"</Command>
+      <Command>if not exist "$(SolutionDir)Common\dll" mkdir "$(SolutionDir)Common\dll"
+copy $(SolutionDir)Common\bin\$(Configuration)\*.dll $(SolutionDir)Common\dll\.
+
+if not exist "$(SolutionDir)Common\include" mkdir "$(SolutionDir)Common\include"
+copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -161,6 +165,7 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
   <ItemGroup>
     <ClCompile Include="export\Export.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -170,6 +175,7 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
     </ClCompile>
     <ClCompile Include="source\CHalfEdgeRep.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="source\Vector.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -178,6 +184,7 @@ copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\</Command>
     <ClCompile Include="zLibHalfEdgeRep.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
