@@ -2,10 +2,6 @@
 
 namespace MeshSimplificationQELib
 {
-    //CSimplificationQuadricError* CreateSimplificationQE()
-    //{
-    //    return new CSimplificationQuadricError();
-    //}
     CSimplificationQuadricError* CreateSimplificationQE(IN const std::vector<MeshIOLib::Vertex>& verts, IN const std::vector<MeshIOLib::Triangle>& tris)
     {
         return new CSimplificationQuadricError(verts, tris);

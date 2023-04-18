@@ -3,11 +3,6 @@
 #include <cassert>
 namespace MeshSimplificationQELib
 {
-    //CSimplificationQuadricError::CSimplificationQuadricError()
-    //{
-
-    //}
-
     CSimplificationQuadricError::CSimplificationQuadricError(const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris)
     {
         // (1) Load Data
@@ -85,7 +80,6 @@ namespace MeshSimplificationQELib
         // [1] Target Count 정하기
         int targetCount = ::round((float)m_outTriangles.size() * rate);
         assert(targetCount >= 4);
-        //printf("Mesh Simplification (C)2014 by Sven Forstmann in 2014, MIT License (%zu-bit)\n", sizeof(size_t) * 8);
 
         // [2] 간략화
         //Internal_Simplification(targetCount, agValue);

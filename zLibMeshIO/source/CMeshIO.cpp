@@ -96,6 +96,23 @@ namespace MeshIOLib
         if(fn != NULL)
             ::fclose(fn);
 
+        // 5. vertex에 중복이 있는 지 검사
+        bool isDuplicate = Internal_IsDuplicates(m_vecVertices);
+        // // 5.1. 있다면, 중복 제거하고 Triangle 재구성
+        if (!isDuplicate)
+            return;
+
+        std::vector<VertexSTL> verts_temp(m_vecVertices.size());
+        std::transform(m_vecVertices.cbegin(), m_vecVertices.cend(), verts_temp.begin(), [](Vertex v)
+            {
+                VertexSTL vStl;
+                vStl._x = v._position.x;
+                vStl._y = v._position.y;
+                vStl._z = v._position.z;
+                return vStl;
+            });
+
+        Internal_EleminateDuplicate(verts_temp);
     }
 
     void CMeshIO::LoadSTL(const char* filename)
@@ -115,12 +132,41 @@ namespace MeshIOLib
 
         // 2. vertex data 추출
         std::vector<VertexSTL> verts_temp = LoadSTL_Vertices(filename);
+
+        // 3. 중복된 Vertex List를 활용하여 vertex List 및 triangle list 구성
+        Internal_EleminateDuplicate(verts_temp);
+    }
+
+    template <typename T>
+    bool CMeshIO::Internal_IsDuplicates(std::vector<T> verts_temp)
+    {
+        std::set<T> duplicates;
+        std::sort(verts_temp.begin(), verts_temp.end());
+        std::set<T> distinct(verts_temp.begin(), verts_temp.end());
+        // 중복된 리스트 추출하기
+        //std::set_difference(vec.begin(), vec.end(), distinct.begin(), distinct.end(), std::inserter(duplicates, duplicates.end()));
+        return (verts_temp.size() != distinct.size());
+    }
+
+    template <typename T>
+    void CMeshIO::Internal_EleminateDuplicate(std::vector<T>& verts_temp)
+    {
 #if 1
+        // // 
+        // [NOTE] 중복된 Vertex List를 활용하여 vertex List 및 triangle list 구성
+        // //
+        
+        // 1. 데이터 초기화
+        if(m_vecVertices.size() != 0)
+            m_vecVertices.clear();
+        if(m_vecTriangles.size() != 0)
+            m_vecTriangles.clear();
+
         const size_t numVertices = verts_temp.size();
         // face 정보를 구성하기 위한 vertex idx
         int32_t* indices = (int32_t*) ::malloc(numVertices * sizeof(int32_t));
-        //loopi(0, numVertices)
-        //    verts_temp[i]._id = i;
+        loopi(0, numVertices)
+            verts_temp[i]._id = i;
         std::sort(verts_temp.begin(), verts_temp.end());
 
         // vertex 구성
@@ -128,7 +174,7 @@ namespace MeshIOLib
         loopi(0, numVertices)
         {
             VertexSTL v = verts_temp[i];
-            if (!newIdx || v != verts_temp[newIdx-1])
+            if (!newIdx || v != verts_temp[newIdx - 1])
             {
                 verts_temp[newIdx++] = v;
             }
@@ -142,8 +188,8 @@ namespace MeshIOLib
         // trinagle 구성
         m_vecTriangles.reserve(numVertices / 3);
         for (int i = 0; i < numVertices; i += 3)
-            m_vecTriangles.push_back(Triangle(indices[i], indices[i+1], indices[i+2]));
-            
+            m_vecTriangles.push_back(Triangle(indices[i], indices[i + 1], indices[i + 2]));
+
         ::free(indices);
 #else
         m_vecVertices.reserve(verts_temp.size());
@@ -157,9 +203,9 @@ namespace MeshIOLib
             auto fID = i / 3;
             verts_temp[i]._triangleID = fID;
             verts_temp[i]._vid = vid;
-            m_vecTriangles[fID]._vertexID[vid++] = i;            
+            m_vecTriangles[fID]._vertexID[vid++] = i;
             if (vid == 3)
-                vid = 0;           
+                vid = 0;
         }
 
         // 4. vertex 순으로 정렬 (병렬 처리)(to deduplicate)
@@ -170,11 +216,11 @@ namespace MeshIOLib
         }
 
         parallel_sort(verts_temp.begin(), verts_temp.end(), threads);
-        
+
         // 5. 중복된 버텍스를 제거하고, triangle index리스트를 새롭게 구성한다.  
         std::vector<Vertex> verts_result;
         std::vector<Vertex> temps;
-        Vertex prevVertex = verts_temp[0];          
+        Vertex prevVertex = verts_temp[0];
         size_t totalvertexCount = verts_temp.size();
         loopi(0, totalvertexCount)
         {
@@ -182,7 +228,7 @@ namespace MeshIOLib
             if (prevVertex == verts_temp[i])
             {
                 temps.push_back(verts_temp[i]);
-                if(i != totalvertexCount-1)
+                if (i != totalvertexCount - 1)
                     continue;
             }
 
@@ -199,7 +245,7 @@ namespace MeshIOLib
 
             // 최초 데이터만 최종 결과로 저장한다.
             size_t tempID = m_vecVertices.size();
-            loopj(0, tempSize)            
+            loopj(0, tempSize)
             {
                 size_t fID = prevVertex._ptrTriIDs[j];
                 size_t vID = prevVertex._ptrVids[j];
@@ -218,7 +264,7 @@ namespace MeshIOLib
             // 새롭게 저장한다.
             prevVertex = verts_temp[i];
             temps.push_back(prevVertex);
-        }
+    }
 #endif
     }
 
@@ -308,7 +354,6 @@ namespace MeshIOLib
         }
 
         // 2. 끝날때까지 반복
-        size_t index = 0;
         std::string line;
         while (!file.eof()) 
         {
@@ -320,9 +365,7 @@ namespace MeshIOLib
             if (line.rfind("vertex", 0) == 0)
             {
                 // 2.3.1. 찾으면, vector값을 저장한다.
-                VertexSTL v = get_vector(line);
-                v._id = index++;
-                verts_temp.push_back(v);
+                verts_temp.push_back(get_vector(line));
             }
         }
         file.close();
@@ -376,7 +419,6 @@ namespace MeshIOLib
             {
                 const int id = i * 3 + j;
                 std::memcpy(&verts_temp[id], &ret[(50 * i) + (j * 12) + 12], 12);
-                verts_temp[id]._id = id;
             }
         }
         file.close();

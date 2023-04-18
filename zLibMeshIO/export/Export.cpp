@@ -15,6 +15,13 @@ namespace MeshIOLib
         object->LoadSTL(filename);
     }
 
+    void LoadOBJ(IN CMeshIO* object, IN const char* filename)
+    {
+        if (object == NULL)
+            return;
+        object->LoadOBJ(filename);
+    }
+
     void WriteOBJ(IN CMeshIO* object, IN const char* filename)
     {
         if (object == NULL)

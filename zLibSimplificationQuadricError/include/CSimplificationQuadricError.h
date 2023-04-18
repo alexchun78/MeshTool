@@ -12,7 +12,6 @@ namespace MeshSimplificationQELib
     class CSimplificationQuadricError
     {
     public:
-        //CSimplificationQuadricError();
         CSimplificationQuadricError(const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris);
         //CSimplificationQuadricError(const std::string dllPath, const std::vector<MeshIOLib::Vertex>& verts, const std::vector<MeshIOLib::Triangle>& tris);
         ~CSimplificationQuadricError();

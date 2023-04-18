@@ -2,6 +2,8 @@
 #include "Vector.h"
 #include "CMeshIOData.h"
 #include <vector>
+#include <set>
+#include <algorithm>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -41,6 +43,10 @@ namespace MeshIOLib
         std::vector<VertexSTL> LoadSTL_Vertices(const char* filename);
         std::vector<VertexSTL> Load_ASCII(const char* filename);
         std::vector<VertexSTL> Load_Binary(const char* filename);
+        template <typename T>
+        void Internal_EleminateDuplicate(std::vector<T>& verts_temp);
+        template <typename T>
+        bool Internal_IsDuplicates(std::vector<T> verts_temp);
    
     private:
         inline void write_float(float f, FILE* file) {

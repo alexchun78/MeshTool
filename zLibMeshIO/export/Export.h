@@ -15,6 +15,7 @@ namespace MeshIOLib
     extern "C" {
         MESHIOLIB_API CMeshIO* CreateMeshIO();
         MESHIOLIB_API void LoadSTL(IN CMeshIO* object, IN const char* filename);
+        MESHIOLIB_API void LoadOBJ(IN CMeshIO* object, IN const char* filename);
         MESHIOLIB_API void WriteOBJ(IN CMeshIO* object, IN const char* filename);
         MESHIOLIB_API void WriteOBJWithMeshData(IN CMeshIO* object, IN const char* filename, IN const std::vector<Vertex>& vecVerts, IN const std::vector<Triangle>& vecTris);
         MESHIOLIB_API std::vector<Triangle> GetTriangleList(IN CMeshIO* object);
