@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -87,7 +87,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DLL_EXPORTS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -97,11 +97,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>rem if not exist "$(SolutionDir)Common\dll" mkdir "$(SolutionDir)Common\dll"
-rem copy $(SolutionDir)Common\bin\$(Configuration)\*.dll $(SolutionDir)Common\dll\.
+      <Command>if not exist "$(SolutionDir)Common\dll" mkdir "$(SolutionDir)Common\dll"
+copy $(SolutionDir)Common\bin\$(Configuration)\*.dll $(SolutionDir)Common\dll\.
 
-rem if not exist "$(SolutionDir)Common\include" mkdir "$(SolutionDir)Common\include"
-rem copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
+if not exist "$(SolutionDir)Common\include" mkdir "$(SolutionDir)Common\include"
+copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -158,12 +158,9 @@ rem copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
     <ClCompile Include="..\zLibMeshIO\source\Vector.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="CMeshIOManager.cpp" />
     <ClCompile Include="export\Export.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="manager\CDLLManager.cpp" />
-    <ClCompile Include="manager\CHEManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -173,20 +170,18 @@ rem copy $(ProjectDir)include\*.h $(SolutionDir)Common\include\.</Command>
     <ClCompile Include="source\CSimplificationQuadricError.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="source\CSimplificationQuadricError_others.cpp">
+    <ClCompile Include="source\CSimplificationQuadricError_FQM.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="source\zLibSimplificationQuadricError.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\zLibMeshIO\include\Vector.h" />
-    <ClInclude Include="CMeshIOManager.h" />
     <ClInclude Include="export\Export.h" />
     <ClInclude Include="include\CSimplificationQuadricError.h" />
-    <ClInclude Include="manager\CDLLManager.h" />
-    <ClInclude Include="manager\CHEManager.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

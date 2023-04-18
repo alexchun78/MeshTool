@@ -4,26 +4,28 @@
 #include "../include/CDLLManager.h"
 #include "../include/CMeshIOManager.h"
 #include "../include/CHEManager.h"
+#include "../include/CMeshSimplificationManager.h"
 
 int main()
 {
-    // dll 파일을 로드한다.
+    // [1] Mesh IO DLL TEST
     std::string path = "../Common/dll/zLibMeshIO.dll";
-    CDLLManager* dllManager = new CDLLManager(path.c_str());
-    auto handle = dllManager->GetDLLHandle();
+    CDLLManager* dllIO = new CDLLManager(path.c_str());
+    auto handle = dllIO->GetDLLHandle();
     if (handle == NULL)
         return -1;
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
-    bool bRtn = ioManager->LoadSTL("..\\smartslicerA.stl");
+    bool bRtn = ioManager->LoadSTL("..\\cast3br.stl");
     if (bRtn == false)
         return -1;
 
     auto verts = ioManager->GetVertexList();
     auto tris = ioManager->GetTriangleList();
 
+    // [2] Half Edge DLL TEST
     path = "../Common/dll/zLibHalfEdgeRep.dll";
-    CDLLManager* dllManager2 = new CDLLManager(path.c_str());
-    auto handle2 = dllManager2->GetDLLHandle();
+    CDLLManager* dllHalfEdge = new CDLLManager(path.c_str());
+    auto handle2 = dllHalfEdge->GetDLLHandle();
     if (handle2 == NULL)
         return -1;
 
@@ -34,9 +36,27 @@ int main()
     std::vector<MeshIOLib::index_t> neighbors;
     heManager->FindVertexNeighborsFromVertex(neighbors, 3);
 
+    // [3] Mesh Simplificiation DLL TEST
+    path = "../Common/dll/zLibSimplificationQuadricError.dll";
+    CDLLManager* dllSimplificationQE = new CDLLManager(path.c_str());
+    auto handle3 = dllSimplificationQE->GetDLLHandle();
+    if (handle3 == NULL)
+        return -1;
 
-    dllManager->TerminateDLL();
-    dllManager2->TerminateDLL();
+    //CMeshSimplificationManager* simplificationQEManager = new CMeshSimplificationManager(handle3);
+    CMeshSimplificationManager* simplificationQEManager = new CMeshSimplificationManager(handle3, verts, tris);
+    bRtn = simplificationQEManager->DoSimplificationQE(0.2, 7);
+    if (bRtn == false)
+        return -1;
+    std::vector<MeshIOLib::Vertex> simVerts;
+    std::vector<MeshIOLib::Triangle> simTris;
+    simplificationQEManager->GetSimplificationOutputData(simVerts, simTris);
+
+
+    dllIO->TerminateDLL();
+    dllHalfEdge->TerminateDLL();
+    dllSimplificationQE->TerminateDLL();
 
     return 0;
 }
+

@@ -162,6 +162,9 @@
     <ClCompile Include="source\CMeshIOManager.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="source\CMeshSimplificationManager.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="source\MTApp.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -170,6 +173,7 @@
     <ClInclude Include="include\CDLLManager.h" />
     <ClInclude Include="include\CHEManager.h" />
     <ClInclude Include="include\CMeshIOManager.h" />
+    <ClInclude Include="include\CMeshSimplificationManager.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
