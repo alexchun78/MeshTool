@@ -12,8 +12,8 @@
 #define loopk(start,end) for(size_t k = start; k < end ; ++k)
 
 // add headers that you want to pre-compile here
-#include "../Common/include/CMeshIO.h"
-#include "../Common/include/CMeshIOData.h"
+//#include "../Common/include/CMeshIO.h"
+//#include "../Common/include/CMeshIOData.h"
 
 // add headers that you want to pre-compile here
 //typedef MeshIOLib::CMeshIO* (*DLL_CREATE_MESHIO)();
