@@ -5,6 +5,7 @@
 #include "../include/CMeshIOManager.h"
 #include "../include/CHEManager.h"
 #include "../include/CMeshSimplificationManager.h"
+#include <time.h>
 
 int main()
 {
@@ -14,9 +15,16 @@ int main()
     auto handle = dllIO->GetDLLHandle();
     if (handle == NULL)
         return -1;
+
+    const char* inputData = "..\\DATA\\input\\SurgicalGuide_1.stl";
+    const char* outputData = "..\\DATA\\output\\SurgicalGuide_1_75.stl";
+    float reductionRate = 0.75f;
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
-    bool bRtn = ioManager->LoadOBJ("..\\smartslicerA.OBJ");
-    //bool bRtn = ioManager->LoadSTL("..\\cast3br.stl");
+    bool bRtn = ioManager->LoadSTL(inputData);
+    //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\2_bunnyO_new.stl");
+    //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\prosthesis.stl");
+    //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\SurgicalGuide_1.stl");
+    //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\cast3br.stl");
     if (bRtn == false)
         return -1;
 
@@ -37,6 +45,12 @@ int main()
     std::vector<MeshIOLib::index_t> neighbors;
     heManager->FindVertexNeighborsFromVertex(neighbors, 3);
 
+// 시간 측정
+clock_t start, end;
+double result;
+ 
+// 시간 측정
+start = clock();
     // [3] Mesh Simplificiation DLL TEST
     path = "../Common/dll/zLibSimplificationQuadricError.dll";
     CDLLManager* dllSimplificationQE = new CDLLManager(path.c_str());
@@ -45,16 +59,21 @@ int main()
         return -1;
 
     CMeshSimplificationManager* simplificationQEManager = new CMeshSimplificationManager(handle3, verts, tris);
-    bRtn = simplificationQEManager->DoSimplificationQE(0.2, 7);
+    bRtn = simplificationQEManager->DoSimplificationQE(reductionRate, 7); // 0.25,0.5,0.75
     if (bRtn == false)
         return -1;
     std::vector<MeshIOLib::Vertex> simVerts;
     std::vector<MeshIOLib::Triangle> simTris;
     simplificationQEManager->GetSimplificationOutputData(simVerts, simTris);
 
-    // [4] 결과 파일 출력
-    ioManager->WriteSTLwithData("..\\smartslicerA_sim.stl", simVerts, simTris);
+    // 시간 측정
+    end = clock();
+    result = (double)(end - start);
+    auto resultSec = (result) / CLOCKS_PER_SEC;
+    std::cout << "elasped time : " << result << std::endl;
 
+    // [4] 결과 파일 출력
+    ioManager->WriteSTLwithData(outputData, simVerts, simTris);
 
     dllIO->TerminateDLL();
     dllHalfEdge->TerminateDLL();
