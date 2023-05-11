@@ -27,9 +27,11 @@ class CEarCut
 public:
     CEarCut();
     CEarCut(const std::vector<vec2>& polyline);
+    CEarCut(const std::vector<vec2>& polyline, const int startId);
     ~CEarCut();
 
     bool DoEarcutSubDivisionWithoutHole(std::vector<Triangle>& tris);
+
 
 private:
     bool InsidePolygon(const std::vector<vec2>& polygon, const vec2& pt);

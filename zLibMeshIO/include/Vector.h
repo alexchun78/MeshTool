@@ -29,6 +29,14 @@ typedef struct vec2
 	{
 		return asArray[i];
 	}
+
+	vec2& operator = (const vec2& vector)
+	{
+		x = vector.x;
+		y = vector.y;
+		return *this;
+	}
+
 } Vec2;
 
 typedef struct vec3
