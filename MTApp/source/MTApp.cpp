@@ -103,8 +103,6 @@ int main()
             count++;
             break;
         }        
-        if (edgeCount - count < 3) // exception > error
-            return -1;
     }
     // 시간 측정
     clock_t start, end;

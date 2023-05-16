@@ -222,7 +222,7 @@ namespace MeshHERepLib
                 outgoingBoundaryHalfEdges.erase(outgoingBoundaryHalfEdges.begin());
             }
         }
-#ifndef NDEBUG
+#ifdef NDEBUG
         for (auto iter = vertex2outgoing_boundaryHalfEdges.begin(); iter != vertex2outgoing_boundaryHalfEdges.end(); ++iter)
         {
             assert(iter->second.empty());
