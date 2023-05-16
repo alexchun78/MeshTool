@@ -16,11 +16,15 @@ int main()
     if (handle == NULL)
         return -1;
 
-    const char* inputData = "..\\DATA\\input\\SurgicalGuide_1.stl";
-    const char* outputData = "..\\DATA\\output\\SurgicalGuide_1_75.stl";
+    //hole detect test : diana_hole_top
+    const char* inputData = "..\\DATA\\input\\diana_hole_top.obj";
+    const char* outputData = "..\\DATA\\output\\diana_hole_top_75.obj";
+    //const char* inputData = "..\\DATA\\input\\SurgicalGuide_1.stl";
+    //const char* outputData = "..\\DATA\\output\\SurgicalGuide_1_75.stl";
     float reductionRate = 0.75f;
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
-    bool bRtn = ioManager->LoadSTL(inputData);
+    bool bRtn = ioManager->LoadOBJ(inputData);
+    // bool bRtn = ioManager->LoadSTL(inputData);
     //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\2_bunnyO_new.stl");
     //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\prosthesis.stl");
     //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\SurgicalGuide_1.stl");
@@ -44,13 +48,70 @@ int main()
         return -1;
     std::vector<MeshIOLib::index_t> neighbors;
     heManager->FindVertexNeighborsFromVertex(neighbors, 3);
+    std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> edges;
+    heManager->GetBoundaryEdges(edges);
 
-// 시간 측정
-clock_t start, end;
-double result;
+    // hole이 두개 이상인 경우는 어떻게 구분하지?
+    
+    // #1. 남아 있는 edge 리스트가 있는 동안 반복한다.
+    int count = 1;
+    int edgeCount = edges.size();
+    std::vector<unsigned int> vecUsed(edgeCount);
+    std::vector< std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>>> edgesGroup;
+    int startIdx = 0;
+    auto startE = edges[0];
+    while(count != edgeCount)
+    {
+        vecUsed[startIdx] = 1;
+        bool bTest = true;
+        std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> temp_edges;
+        temp_edges.reserve(edges.size());
+        temp_edges.push_back(startE);
+        int tempCount = 1;
+        do
+        {
+            auto prevCount = count;
+            auto end = startE.second;
+            for (auto i = startIdx; i < edges.size(); ++i)
+            {
+                if (vecUsed[i] == 1)
+                    continue;
+                if (end == edges[i].first)
+                {
+                    count++; 
+                    tempCount++;
+                    temp_edges.push_back(edges[i]);
+                    startE = edges[i];
+                    vecUsed[i] = 1;
+                    break;
+                }
+            }
+            if (prevCount == count)
+                bTest = false;
+        } while (bTest);
+
+        temp_edges.resize(tempCount);
+        edgesGroup.push_back(temp_edges);
+
+        // start 업데이트
+        for (auto i = startIdx; i < edges.size(); ++i)
+        {
+            if (vecUsed[i] == 1)
+                continue;
+            startE = edges[i];
+            startIdx = i;
+            count++;
+            break;
+        }        
+        if (edgeCount - count < 3) // exception > error
+            return -1;
+    }
+    // 시간 측정
+    clock_t start, end;
+    double result;
  
-// 시간 측정
-start = clock();
+    // 시간 측정
+    start = clock();
     // [3] Mesh Simplificiation DLL TEST
     path = "../Common/dll/zLibSimplificationQuadricError.dll";
     CDLLManager* dllSimplificationQE = new CDLLManager(path.c_str());

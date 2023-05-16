@@ -24,6 +24,18 @@ CEarCut::CEarCut(const std::vector<vec2>& polyline)
     m_polyline = polyline;
 }
 
+CEarCut::CEarCut(const std::vector<vec2>& polyline, const int startId)
+{
+    std::vector<vec2> temp(polyline.size());
+    std::copy(polyline.begin() + startId, polyline.end(), temp.begin());
+    std::copy(polyline.begin(), polyline.begin() + startId, temp.begin()+temp.size()-startId);
+    //for (int i = startId; i < polyline.size(); ++i)
+    //{
+
+    //}
+    m_polyline = temp;
+}
+
 CEarCut::~CEarCut()
 {
 
