@@ -160,7 +160,6 @@ namespace MeshIOLib
         }
     } VertexSTL;
 
-
     typedef struct vertex_tag {
 
         vertex_tag() {}

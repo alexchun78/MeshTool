@@ -17,14 +17,14 @@ int main()
         return -1;
 
     //hole detect test : diana_hole_top
-    const char* inputData = "..\\DATA\\input\\diana_hole_top.obj";
-    const char* outputData = "..\\DATA\\output\\diana_hole_top_75.obj";
+    const char* inputData = "..\\DATA\\input\\2_bunnyO_new.stl";
+    const char* outputData = "..\\DATA\\output\\2_bunnyO_new.stl";
     //const char* inputData = "..\\DATA\\input\\SurgicalGuide_1.stl";
     //const char* outputData = "..\\DATA\\output\\SurgicalGuide_1_75.stl";
-    float reductionRate = 0.75f;
+    float reductionRate = 0.25f;
     CMeshIOManager* ioManager = new CMeshIOManager(handle);
-    bool bRtn = ioManager->LoadOBJ(inputData);
-    // bool bRtn = ioManager->LoadSTL(inputData);
+   // bool bRtn = ioManager->LoadOBJ(inputData);
+     bool bRtn = ioManager->LoadSTL(inputData);
     //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\2_bunnyO_new.stl");
     //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\prosthesis.stl");
     //bool bRtn = ioManager->LoadSTL("..\\DATA\\input\\SurgicalGuide_1.stl");
@@ -51,58 +51,60 @@ int main()
     std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> edges;
     heManager->GetBoundaryEdges(edges);
 
-    // hole이 두개 이상인 경우는 어떻게 구분하지?
-    
-    // #1. 남아 있는 edge 리스트가 있는 동안 반복한다.
-    int count = 1;
-    int edgeCount = edges.size();
-    std::vector<unsigned int> vecUsed(edgeCount);
-    std::vector< std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>>> edgesGroup;
-    int startIdx = 0;
-    auto startE = edges[0];
-    while(count != edgeCount)
+    // [NOTE] hole이 있는 경우에만 실행함
+    if (edges.size() != 0)
     {
-        vecUsed[startIdx] = 1;
-        bool bTest = true;
-        std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> temp_edges;
-        temp_edges.reserve(edges.size());
-        temp_edges.push_back(startE);
-        int tempCount = 1;
-        do
+        // #1. 남아 있는 edge 리스트가 있는 동안 반복한다.
+        int count = 1;
+        int edgeCount = edges.size();
+        std::vector<unsigned int> vecUsed(edgeCount);
+        std::vector< std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>>> edgesGroup;
+        int startIdx = 0;
+        auto startE = edges[0];
+        while (count != edgeCount)
         {
-            auto prevCount = count;
-            auto end = startE.second;
+            vecUsed[startIdx] = 1;
+            bool bTest = true;
+            std::vector<std::pair<MeshIOLib::index_t, MeshIOLib::index_t>> temp_edges;
+            temp_edges.reserve(edges.size());
+            temp_edges.push_back(startE);
+            int tempCount = 1;
+            do
+            {
+                auto prevCount = count;
+                auto end = startE.second;
+                for (auto i = startIdx; i < edges.size(); ++i)
+                {
+                    if (vecUsed[i] == 1)
+                        continue;
+                    if (end == edges[i].first)
+                    {
+                        count++;
+                        tempCount++;
+                        temp_edges.push_back(edges[i]);
+                        startE = edges[i];
+                        vecUsed[i] = 1;
+                        break;
+                    }
+                }
+                if (prevCount == count)
+                    bTest = false;
+            } while (bTest);
+
+            temp_edges.resize(tempCount);
+            edgesGroup.push_back(temp_edges);
+
+            // start 업데이트
             for (auto i = startIdx; i < edges.size(); ++i)
             {
                 if (vecUsed[i] == 1)
                     continue;
-                if (end == edges[i].first)
-                {
-                    count++; 
-                    tempCount++;
-                    temp_edges.push_back(edges[i]);
-                    startE = edges[i];
-                    vecUsed[i] = 1;
-                    break;
-                }
+                startE = edges[i];
+                startIdx = i;
+                count++;
+                break;
             }
-            if (prevCount == count)
-                bTest = false;
-        } while (bTest);
-
-        temp_edges.resize(tempCount);
-        edgesGroup.push_back(temp_edges);
-
-        // start 업데이트
-        for (auto i = startIdx; i < edges.size(); ++i)
-        {
-            if (vecUsed[i] == 1)
-                continue;
-            startE = edges[i];
-            startIdx = i;
-            count++;
-            break;
-        }        
+        }
     }
     // 시간 측정
     clock_t start, end;
